@@ -1,4 +1,3 @@
-import 'package:cryptography_flutter/cryptography_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
@@ -12,8 +11,6 @@ void main() {
     onOpened: (m) => print('OPENED: ${m.data}'),
     onInitial: (m) => print('INITIAL: ${m.data}'),
   );
-  FlutterCryptography.enable();
-
   runApp(const MyApp());
 }
 
