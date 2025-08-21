@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
+import 'fcm/fcn_bootstrap.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  fcmInit(
+    onToken: (t) => print('FCM token: $t'),
+    onForeground: (m) => print('FG: ${m.notification?.title} ${m.data}'),
+    onOpened: (m) => print('OPENED: ${m.data}'),
+    onInitial: (m) => print('INITIAL: ${m.data}'),
+  );
+
   runApp(const MyApp());
 }
 
