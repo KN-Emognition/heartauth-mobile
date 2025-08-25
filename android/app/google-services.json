@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1017509602207",
+    "project_id": "knemognition-heartauth",
+    "storage_bucket": "knemognition-heartauth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017509602207:android:2bd16f47ea5ec205d293aa",
+        "android_client_info": {
+          "package_name": "com.emognition.hauth_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlPLLKmMTkFR6QWraGpP9wJOQdenIL7NU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017509602207:android:9e44d1e23da3c5d0d293aa",
+        "android_client_info": {
+          "package_name": "zpi.heartAuth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlPLLKmMTkFR6QWraGpP9wJOQdenIL7NU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
