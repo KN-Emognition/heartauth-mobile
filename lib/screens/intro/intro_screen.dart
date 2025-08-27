@@ -26,7 +26,7 @@ class IntroScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IntroductionScreen(
       pages: introPages,
-      onDone: () => onIntroDone(() { Navigator.pushNamed(context, '/pairing'); }, () { Navigator.pushNamed(context, '/'); }),
+      onDone: () => onIntroDone(() { Navigator.pushNamed(context, '/pairing'); }, () { Navigator.pushNamed(context, '/home'); }),
       showSkipButton: true,
       skip: const Text("Skip"),
       next: const Icon(Icons.arrow_forward),

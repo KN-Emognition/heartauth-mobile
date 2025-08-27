@@ -1,7 +1,7 @@
+import 'package:openapi_client/openapi_client.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
-import 'package:openapi_client/openapi_client.dart';
 
 final _dioProvider = Provider<Dio>((ref) {
   final dio = Dio();

@@ -58,7 +58,7 @@ class MyApp extends ConsumerWidget {
       title: 'QR Scanner',
       theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
       routes: {
-        '/': (context) => const HomeScreen(),
+        '/home': (context) => const HomeScreen(),
         '/auth': (context) => const AuthScreen(),
         '/pairing': (context) => const PairingScreen(),
         '/about': (context) => const AboutScreen(),
