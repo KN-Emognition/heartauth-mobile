@@ -68,6 +68,7 @@ All URIs are relative to *http://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 [*ChallengeApi*](doc/ChallengeApi.md) | [**externalChallengeComplete**](doc/ChallengeApi.md#externalchallengecomplete) | **POST** /external/v1/challenge/{id}/complete | Complete a challenge from the device after ECG pass and signature verification.
+[*HealthApi*](doc/HealthApi.md) | [**getHealth**](doc/HealthApi.md#gethealth) | **GET** /actuator/health | Get overall application health
 [*PairingApi*](doc/PairingApi.md) | [**externalPairingConfirm**](doc/PairingApi.md#externalpairingconfirm) | **POST** /external/v1/pair/exchange/confirm | Confirm device pairing by proving possession of the generated private key.
 [*PairingApi*](doc/PairingApi.md) | [**externalPairingInit**](doc/PairingApi.md#externalpairinginit) | **POST** /external/v1/pair/exchange/init | Begin device pairing using a one-time pairing JWT from Keycloak.
 

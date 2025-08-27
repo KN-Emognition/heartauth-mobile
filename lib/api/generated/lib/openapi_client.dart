@@ -11,6 +11,7 @@ export 'package:openapi_client/src/serializers.dart';
 export 'package:openapi_client/src/model/date.dart';
 
 export 'package:openapi_client/src/api/challenge_api.dart';
+export 'package:openapi_client/src/api/health_api.dart';
 export 'package:openapi_client/src/api/pairing_api.dart';
 
 export 'package:openapi_client/src/model/attestation.dart';
