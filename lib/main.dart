@@ -35,7 +35,7 @@ class MyApp extends ConsumerWidget {
     final healthapi = ref.read(healthApiProvider);
 
     try {
-      final info = await healthapi.healthzGet();
+      final info = await healthapi.getHealth();
       if (info.statusCode == 200) {
         if (firstRun) {
           return const IntroScreen();

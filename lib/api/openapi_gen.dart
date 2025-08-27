@@ -1,7 +1,8 @@
+// Openapi Generator last run: : 2025-08-27T21:47:16.852497
 import 'package:openapi_generator_annotations/openapi_generator_annotations.dart';
 
 @Openapi(
-  inputSpec: InputSpec(path: 'api/external.yml'),
+  inputSpec: InputSpec(path: 'api/specs/external.yml'),
   generatorName: Generator.dio,
   outputDirectory: 'api/generated',
   additionalProperties: DioProperties(
@@ -12,7 +13,7 @@ import 'package:openapi_generator_annotations/openapi_generator_annotations.dart
 class MyOpenApi {}
 
 /*
-Add-Content api/external.yml "`n# regen $(Get-Date -Format o)"
+Add-Content api/specs/external.yml "`n# regen $(Get-Date -Format o)"
 dart run build_runner clean
 Remove-Item .dart_tool\openapi-generator-cache.json -Force -ErrorAction SilentlyContinue
 dart run build_runner build --delete-conflicting-outputs
