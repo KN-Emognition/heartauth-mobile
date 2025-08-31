@@ -15,7 +15,7 @@ class IntroScreen extends ConsumerWidget {
   void onIntroDone(void Function() pairingAction, void Function() homeAction) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('isFirstRun', false);
-    if (prefs.getBool('isPaired') ?? false) {
+    if (!(prefs.getBool('isPaired') ?? false)) {
       pairingAction();
     } else {
       homeAction();

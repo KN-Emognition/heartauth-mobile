@@ -10,7 +10,7 @@ class PairingScreen extends StatelessWidget {
         title: const Text('HAuth Mobile'),
       ),
       body: const Center(
-        child: Text('Home Screen'),
+        child: Text('Pairing Screen'),
       ),
     );
   }

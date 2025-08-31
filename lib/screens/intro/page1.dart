@@ -9,7 +9,7 @@ class Page1 extends PageViewModel {
       body: "Your gateway to seamless connectivity and productivity.",
       image: Center(
         child: SvgPicture.asset(
-          'assets/hauth_logo.svg',
+          '/assets/hauth_logo.svg',
           width: 250,
           height: 250,
           semanticsLabel: 'HAuth Logo',

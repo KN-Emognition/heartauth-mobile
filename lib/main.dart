@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hauth_mobile/providers/client_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hauth_mobile/providers/api_client_provider.dart';
+import 'package:hauth_mobile/providers/server_health_provider.dart';
 import 'package:hauth_mobile/theme.dart';
 import 'package:hauth_mobile/screens/intro/intro_screen.dart';
 import 'package:hauth_mobile/screens/home_screen.dart';
@@ -32,10 +33,10 @@ class MyApp extends ConsumerWidget {
     final prefs = await SharedPreferences.getInstance();
     final firstRun = prefs.getBool("isFirstRun") ?? true;
     final paired = prefs.getBool("isPaired") ?? false;
-    final healthapi = ref.read(healthApiProvider);
+    final api = ref.read(apiClientProvider);
 
     try {
-      final info = await healthapi.getHealth();
+      final info = await api.run((client) => client.getHealthApi().getHealth());
       if (info.statusCode == 200) {
         if (firstRun) {
           return const IntroScreen();
@@ -54,6 +55,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final serverHealth = ref.watch(serverHealthProvider);
+
     return MaterialApp(
       title: 'QR Scanner',
       theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
@@ -63,18 +66,23 @@ class MyApp extends ConsumerWidget {
         '/pairing': (context) => const PairingScreen(),
         '/about': (context) => const AboutScreen(),
       },
-      home: FutureBuilder<Widget>(
-        future: _getHome(ref),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return snapshot.data!;
-          } else {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-        },
-      ),
+      home: serverHealth == ServerHealthStatus.unhealthy
+          ? const ErrorScreen(
+              errorText:
+                  "There was an error while trying to reach our servers. Please try again later.",
+            )
+          : FutureBuilder<Widget>(
+              future: _getHome(ref),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return snapshot.data!;
+                } else {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+              },
+            ),
     );
   }
 }
