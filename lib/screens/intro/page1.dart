@@ -5,11 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 class Page1 extends PageViewModel {
   Page1()
   : super(
-      title: "Welcome to HAuth",
-      body: "Your gateway to seamless connectivity and productivity.",
+    title: "Welcome to HAuth",
+    body: "Secure Access, Powered by Your Heart.",
       image: Center(
         child: SvgPicture.asset(
-          '/assets/hauth_logo.svg',
+          'assets/hauth_logo.svg',
           width: 250,
           height: 250,
           semanticsLabel: 'HAuth Logo',
@@ -20,7 +20,7 @@ class Page1 extends PageViewModel {
           fontSize: 28.0,
           fontWeight: FontWeight.w700,
         ),
-        bodyTextStyle: TextStyle(fontSize: 16.0),
+        bodyTextStyle: TextStyle(fontSize: 20.0),
         pageColor: Colors.white,
         imagePadding: EdgeInsets.all(24),
       ),

@@ -3,9 +3,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/screens/intro/page1.dart';
+import 'package:hauth_mobile/screens/intro/page2.dart';
+import 'package:hauth_mobile/screens/intro/page3.dart';
 
 final List<PageViewModel> introPages = [
   Page1(),
+  Page2(),
+  Page3(),
 ];
 
 class IntroScreen extends ConsumerWidget {
