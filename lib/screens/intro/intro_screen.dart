@@ -1,40 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/screens/intro/page1.dart';
 import 'package:hauth_mobile/screens/intro/page2.dart';
 import 'package:hauth_mobile/screens/intro/page3.dart';
 
-final List<PageViewModel> introPages = [
-  Page1(),
-  Page2(),
-  Page3(),
-];
-
 class IntroScreen extends ConsumerWidget {
-
   const IntroScreen({super.key});
-
-  void onIntroDone(void Function() pairingAction, void Function() homeAction) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isFirstRun', false);
-    if (!(prefs.getBool('isPaired') ?? false)) {
-      pairingAction();
-    } else {
-      homeAction();
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final List<PageViewModel> introPages = [
+      Page1(context, ref),
+      Page2(context, ref),
+      Page3(context, ref),
+    ];
+
     return IntroductionScreen(
       pages: introPages,
-      onDone: () => onIntroDone(() { Navigator.pushNamed(context, '/pairing'); }, () { Navigator.pushNamed(context, '/home'); }),
-      showSkipButton: true,
-      skip: const Text("Skip"),
+      showDoneButton: false,
+      showSkipButton: false,
+      dotsContainerDecorator: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
+      globalBackgroundColor: Theme.of(context).colorScheme.onPrimary,
       next: const Icon(Icons.arrow_forward),
-      done: const Text("Done"),
     );
   }
 }
