@@ -1,8 +1,0 @@
-# kill docs + tests + extra files
-doc/**
-docs/**
-test/**
-README.md
-CHANGELOG.md
-.gitignore
-analysis_options.yaml

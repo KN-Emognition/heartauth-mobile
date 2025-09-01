@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hauth_mobile/providers/api_client_provider.dart';
+import 'package:hauth_mobile/providers/server_health_provider.dart';
+import 'package:hauth_mobile/theme.dart';
+import 'package:hauth_mobile/screens/intro/intro_screen.dart';
+import 'package:hauth_mobile/screens/home_screen.dart';
+import 'package:hauth_mobile/screens/auth_screen.dart';
+import 'package:hauth_mobile/screens/pairing_screen.dart';
+import 'package:hauth_mobile/screens/about_screen.dart';
+import 'package:hauth_mobile/screens/error_screen.dart';
+import 'package:hauth_mobile/fcm/fcn_bootstrap.dart';
 
-import 'fcm/fcn_bootstrap.dart';
+void main() async {
+  await dotenv.load(fileName: ".env");
 
-void main() {
   WidgetsFlutterBinding.ensureInitialized();
   fcmInit(
     onToken: (t) => print('FCM token: $t'),
@@ -11,112 +23,66 @@ void main() {
     onOpened: (m) => print('OPENED: ${m.data}'),
     onInitial: (m) => print('INITIAL: ${m.data}'),
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
+  Future<Widget> _getHome(WidgetRef ref) async {
+    final prefs = await SharedPreferences.getInstance();
+    final firstRun = prefs.getBool("isFirstRun") ?? true;
+    final paired = prefs.getBool("isPaired") ?? false;
+    final api = ref.read(apiClientProvider);
+
+    try {
+      final info = await api.run((client) => client.getHealthApi().getHealth());
+      if (info.statusCode == 200) {
+        if (firstRun) {
+          return const IntroScreen();
+        } else if (!paired) {
+          return const PairingScreen();
+        } else {
+          return const HomeScreen();
+        }
+      } else {
+        return const PairingScreen();
+      }
+    } on Exception catch (e) {
+      return ErrorScreen(errorText: e.toString());
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final serverHealth = ref.watch(serverHealthProvider);
+
     return MaterialApp(
       title: 'QR Scanner',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const HomeScreen(),
+      theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/auth': (context) => const AuthScreen(),
+        '/pairing': (context) => const PairingScreen(),
+        '/about': (context) => const AboutScreen(),
+      },
+      home: serverHealth == ServerHealthStatus.unhealthy
+          ? const ErrorScreen(
+              errorText:
+                  "There was an error while trying to reach our servers. Please try again later.",
+            )
+          : FutureBuilder<Widget>(
+              future: _getHome(ref),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return snapshot.data!;
+                } else {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+              },
+            ),
     );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final List<String> scannedCodes = [];
-
-  Future<void> _scanQRCode() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const QRViewExample()),
-    );
-
-    if (result != null && result is String) {
-      setState(() {
-        scannedCodes.insert(0, result); // latest on top
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('QR Scanner'),
-      ),
-      body: scannedCodes.isEmpty
-          ? const Center(child: Text("No QR codes scanned yet"))
-          : ListView.builder(
-        itemCount: scannedCodes.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: const Icon(Icons.qr_code),
-            title: Text(scannedCodes[index]),
-            subtitle: Text("Scanned #${index + 1}"),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _scanQRCode,
-        child: const Icon(Icons.camera_alt),
-      ),
-    );
-  }
-}
-
-class QRViewExample extends StatefulWidget {
-  const QRViewExample({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
-}
-
-class _QRViewExampleState extends State<QRViewExample> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (controller != null) {
-      controller!.pauseCamera();
-      controller!.resumeCamera();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
-      ),
-    );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      controller.pauseCamera();
-      Navigator.pop(context, scanData.code);
-    });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 }
