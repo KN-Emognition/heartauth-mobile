@@ -9,14 +9,16 @@ class ApiWrapper {
 
   ApiWrapper(this._api, this.ref);
 
-  Future<T> run<T>(Future<T> Function(OpenapiClient api) call) async {
+  Future<T> run<T>(Future<T> Function(OpenapiClient api) call, [bool suppressError = false]) async {
     try {
       final result = await call(_api);
       return result;
     } catch (e) {
       // Network or server error
-      ref.read(serverHealthProvider.notifier).state =
-          ServerHealthStatus.unhealthy;
+      if(!suppressError){
+        ref.read(serverHealthProvider.notifier).state =
+            ServerHealthStatus.unhealthy;
+      }
       rethrow;
     }
   }

@@ -21,3 +21,25 @@ collected from their devices.
 - A supported ecg/ppg scanning device (Samsung Galaxy Watch 4 or later running WearOS with our
   custom HeartAuth watch app installed)
 
+## Building the App
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/KN-Emognition/heartauth-mobile.git
+   cd heartauth-mobile
+   ```
+2. Install dependencies:
+   ```bash
+    flutter pub get
+    ```
+3. Configure environment variables:
+   - Create a `.env` file in the root directory.
+   - Add a `API_URL` variable with the URL of your HeartAuth backend services.
+4. Build the app:
+- For Android:
+   ```bash
+   flutter build apk
+   ```
+- For iOS:
+   ```bash
+    flutter build ios
+    ```
