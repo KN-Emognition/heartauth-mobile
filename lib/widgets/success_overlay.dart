@@ -4,8 +4,7 @@ import 'package:lottie/lottie.dart';
 class SuccessAnimationOverlay extends StatefulWidget {
   final String nextRoute;
 
-  const SuccessAnimationOverlay({Key? key, required this.nextRoute})
-      : super(key: key);
+  const SuccessAnimationOverlay({super.key, required this.nextRoute});
 
   @override
   _SuccessAnimationOverlayState createState() =>

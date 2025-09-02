@@ -4,7 +4,9 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Page2 extends PageViewModel {
+  // ignore: unused_field
   final WidgetRef _ref;
+  // ignore: unused_field
   final BuildContext _context;
 
   Page2(this._context, this._ref)

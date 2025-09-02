@@ -7,7 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/providers/intro_step_provider.dart';
 
 class Page3 extends PageViewModel {
+  // ignore: unused_field
   final WidgetRef _ref;
+  // ignore: unused_field
   final BuildContext _context;
 
   Page3(this._context, this._ref)
@@ -45,6 +47,7 @@ class Page3 extends PageViewModel {
                               final status = await Permission.camera.request();
 
                               if (status.isGranted) {
+                                // ignore: unused_result
                                 ref.refresh(currentStepProvider);
                               }
                             }
@@ -67,6 +70,7 @@ class Page3 extends PageViewModel {
                                   .request();
 
                               if (status.isGranted) {
+                                // ignore: unused_result
                                 ref.refresh(currentStepProvider);
                               }
                             }

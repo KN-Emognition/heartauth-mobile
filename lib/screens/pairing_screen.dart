@@ -1,13 +1,14 @@
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:openapi_client/openapi_client.dart';
-import 'package:openapi_client/src/model/pairing_init_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/utils/pairing_data.dart';
-import 'package:hauth_mobile/widgets/successOverlay.dart';
+import 'package:hauth_mobile/widgets/success_overlay.dart';
+import 'package:toastification/toastification.dart';
 
 class PairingScreen extends HookConsumerWidget {
   const PairingScreen({super.key});
@@ -53,28 +54,26 @@ class PairingScreen extends HookConsumerWidget {
         // Show confirmation dialog with display name input
         final confirmed = await showDialog<bool>(
           context: context,
-          builder: (context) =>
-              AlertDialog(
-                title: const Text(
-                    'Are you sure you want to register this device?'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('Device display name:'),
-                    TextField(controller: displayNameController),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text('Register'),
-                  ),
-                ],
+          builder: (context) => AlertDialog(
+            title: const Text('Are you sure you want to register this device?'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Device display name:'),
+                TextField(controller: displayNameController),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
               ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Register'),
+              ),
+            ],
+          ),
         );
 
         if (confirmed != true) return;
@@ -87,62 +86,68 @@ class PairingScreen extends HookConsumerWidget {
         Response<PairingInitResponse>? initResult;
         try {
           initResult = await api.run(
-                (client) =>
-                client.getPairingApi().externalPairingInit(
-                  pairingInitRequest: pairingData.$1,
-                  headers: pairingData.$2,
-                ),
+            (client) => client.getPairingApi().externalPairingInit(
+              pairingInitRequest: pairingData.$1,
+              headers: pairingData.$2,
+            ),
             true,
           );
-          print('Pairing init successful: ${initResult?.data}');
-        } catch (e) {
-          print('Pairing failed: $e');
+        } on DioException catch (e) {
+          if (kDebugMode) {
+            print('Pairing initialization failed: ${e.response?.statusCode} ${e.response?.data['error']}');
+          }
+          toastification.show(
+            title: Text('Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}'),
+            type: ToastificationType.error,
+            autoCloseDuration: const Duration(seconds: 5)
+          );
         }
 
         if (initResult == null) {
           return;
         }
 
-        final confirmPairingData = await buildConfirmPairingRequest(initResult.data!);
+        final confirmPairingData = await buildConfirmPairingRequest(
+          initResult.data!,
+        );
 
         Response<PairingConfirmResponse>? confirmResult;
         try {
           confirmResult = await api.run(
-                (client) =>
-                client.getPairingApi().externalPairingConfirm(
-                  pairingConfirmRequest: confirmPairingData.$1,
-                  headers: confirmPairingData.$2,
-                ),
+            (client) => client.getPairingApi().externalPairingConfirm(
+              pairingConfirmRequest: confirmPairingData.$1,
+              headers: confirmPairingData.$2,
+            ),
             true,
           );
-          print('Pairing confirmation successful: ${initResult.data}');
-        } catch (e) {
-          print('Pairing confirmation failed: $e');
+        } on DioException catch (e) {
+          if (kDebugMode) {
+            print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}');
+          }
+          toastification.show(
+              title: Text('Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}'),
+              type: ToastificationType.error,
+              autoCloseDuration: const Duration(seconds: 5)
+          );
         }
 
         if (confirmResult == null) {
           return;
         }
 
-        if(confirmResult.statusCode == 200){
-          await preferences.setBool('isPaired', true);
-          if (context.mounted) {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                opaque: false,
-                pageBuilder: (_, __, ___) => const SuccessAnimationOverlay(
-                  nextRoute: '/home',
-                ),
-              ),
-            );
+        await preferences.setBool('isPaired', true);
+        if (context.mounted) {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              opaque: false,
+              pageBuilder: (_, _, _) =>
+                  const SuccessAnimationOverlay(nextRoute: '/home'),
+            ),
+          );
 
-          }
-        } else {
-          print('Pairing confirmation failed with status code: ${confirmResult.statusCode}');
+          // Stop the scanner
+          await cameraController.stop();
         }
-
-        // Stop the scanner
-        await cameraController.stop();
       },
     );
   }
