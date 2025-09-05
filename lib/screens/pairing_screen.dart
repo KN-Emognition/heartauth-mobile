@@ -111,7 +111,7 @@ class PairingScreen extends HookConsumerWidget {
           initResult.data!,
         );
 
-        Response<PairingConfirmResponse>? confirmResult;
+        Response<StatusResponse>? confirmResult;
         try {
           confirmResult = await api.run(
             (client) => client.getPairingApi().externalPairingConfirm(

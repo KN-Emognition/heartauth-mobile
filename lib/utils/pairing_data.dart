@@ -53,10 +53,9 @@ Future<(PairingConfirmRequest, Map<String, dynamic>)> buildConfirmPairingRequest
   return (
     PairingConfirmRequest(
       (b) => b
-        ..jti = initResponse.jti
         ..deviceId = storage.getString("deviceId")
         ..signature = signature
-        ..alg = PairingConfirmRequestAlgEnum.eS256,
+        ..alg = EncryptionAlgo.eS256
     ),
     {"Authorization": "Bearer ${storage.getString("tempJwt")}"},
   );
