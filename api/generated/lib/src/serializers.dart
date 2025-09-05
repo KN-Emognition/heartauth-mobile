@@ -16,30 +16,26 @@ import 'package:openapi_client/src/model/date.dart';
 
 import 'package:openapi_client/src/model/attestation.dart';
 import 'package:openapi_client/src/model/challenge_complete_request.dart';
-import 'package:openapi_client/src/model/challenge_status_response.dart';
-import 'package:openapi_client/src/model/device_credential.dart';
+import 'package:openapi_client/src/model/encryption_algo.dart';
 import 'package:openapi_client/src/model/flow_status.dart';
 import 'package:openapi_client/src/model/pairing_confirm_request.dart';
-import 'package:openapi_client/src/model/pairing_confirm_response.dart';
 import 'package:openapi_client/src/model/pairing_init_request.dart';
 import 'package:openapi_client/src/model/pairing_init_response.dart';
-import 'package:openapi_client/src/model/pairing_init_response_policy.dart';
 import 'package:openapi_client/src/model/platform.dart';
+import 'package:openapi_client/src/model/status_response.dart';
 
 part 'serializers.g.dart';
 
 @SerializersFor([
   Attestation,
   ChallengeCompleteRequest,
-  ChallengeStatusResponse,
-  DeviceCredential,
+  EncryptionAlgo,
   FlowStatus,
   PairingConfirmRequest,
-  PairingConfirmResponse,
   PairingInitRequest,
   PairingInitResponse,
-  PairingInitResponsePolicy,
   Platform,
+  StatusResponse,
 ])
 Serializers serializers = (_$serializers.toBuilder()
       ..add(const OneOfSerializer())

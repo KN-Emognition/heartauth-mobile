@@ -8,10 +8,10 @@ import 'package:openapi_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**deviceId** | **String** | Stable device identifier. | 
+**deviceId** | **String** |  | 
 **displayName** | **String** |  | 
-**publicKeyPem** | **String** | PEM-encoded ECDSA P-256 public key. | 
-**fcmToken** | **String** | Firebase Cloud Messaging token. | 
+**publicKeyPem** | **String** |  | 
+**fcmToken** | **String** |  | 
 **platform** | [**Platform**](Platform.md) |  | 
 **osVersion** | **String** |  | [optional] 
 **model** | **String** |  | [optional] 

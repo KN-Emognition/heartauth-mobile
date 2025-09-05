@@ -10,7 +10,7 @@ void main() {
     //
     // Device signs the server-provided nonce (and context) with its hardware-backed private key. On success, orchestrator persists device metadata and marks `jti` as linked.
     //
-    //Future<PairingConfirmResponse> externalPairingConfirm(PairingConfirmRequest pairingConfirmRequest) async
+    //Future<StatusResponse> externalPairingConfirm(PairingConfirmRequest pairingConfirmRequest) async
     test('test externalPairingConfirm', () async {
       // TODO
     });

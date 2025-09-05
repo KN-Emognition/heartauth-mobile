@@ -2,23 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:toastification/toastification.dart';
+import 'package:hauth_mobile/fcm/fcm_bootstrap.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/providers/server_health_provider.dart';
 import 'package:hauth_mobile/theme.dart';
+import 'package:hauth_mobile/utils/device_info.dart';
 import 'package:hauth_mobile/screens/intro/intro_screen.dart';
 import 'package:hauth_mobile/screens/home_screen.dart';
 import 'package:hauth_mobile/screens/auth_screen.dart';
 import 'package:hauth_mobile/screens/pairing_screen.dart';
 import 'package:hauth_mobile/screens/about_screen.dart';
 import 'package:hauth_mobile/screens/error_screen.dart';
-import 'package:hauth_mobile/fcm/fcn_bootstrap.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
+  await updateDeviceInfo();
 
   WidgetsFlutterBinding.ensureInitialized();
-  fcmInit(
-    onToken: (t) => print('FCM token: $t'),
+  await fcmInit(
+    onToken: (t) async => {(await SharedPreferences.getInstance()).setString('fcmToken', t)},
     onForeground: (m) => print('FG: ${m.notification?.title} ${m.data}'),
     onOpened: (m) => print('OPENED: ${m.data}'),
     onInitial: (m) => print('INITIAL: ${m.data}'),
@@ -57,32 +60,34 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final serverHealth = ref.watch(serverHealthProvider);
 
-    return MaterialApp(
-      title: 'QR Scanner',
-      theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
-      routes: {
-        '/home': (context) => const HomeScreen(),
-        '/auth': (context) => const AuthScreen(),
-        '/pairing': (context) => const PairingScreen(),
-        '/about': (context) => const AboutScreen(),
-      },
-      home: serverHealth == ServerHealthStatus.unhealthy
-          ? const ErrorScreen(
-              errorText:
-                  "There was an error while trying to reach our servers. Please try again later.",
-            )
-          : FutureBuilder<Widget>(
-              future: _getHome(ref),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return snapshot.data!;
-                } else {
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
-                }
-              },
-            ),
+    return ToastificationWrapper(
+      child: MaterialApp(
+        title: 'QR Scanner',
+        theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
+        routes: {
+          '/home': (context) => const HomeScreen(),
+          '/auth': (context) => const AuthScreen(),
+          '/pairing': (context) => const PairingScreen(),
+          '/about': (context) => const AboutScreen(),
+        },
+        home: serverHealth == ServerHealthStatus.unhealthy
+            ? const ErrorScreen(
+          errorText:
+          "There was an error while trying to reach our servers. Please try again later.",
+        )
+            : FutureBuilder<Widget>(
+          future: _getHome(ref),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return snapshot.data!;
+            } else {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+          },
+        ),
+      )
     );
   }
 }

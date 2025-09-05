@@ -7,7 +7,6 @@ void main() {
   // TODO add properties to the builder and call build()
 
   group(PairingInitRequest, () {
-    // Stable device identifier.
     // String deviceId
     test('to test the property `deviceId`', () async {
       // TODO
@@ -18,13 +17,11 @@ void main() {
       // TODO
     });
 
-    // PEM-encoded ECDSA P-256 public key.
     // String publicKeyPem
     test('to test the property `publicKeyPem`', () async {
       // TODO
     });
 
-    // Firebase Cloud Messaging token.
     // String fcmToken
     test('to test the property `fcmToken`', () async {
       // TODO

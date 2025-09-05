@@ -4,8 +4,10 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Page1 extends PageViewModel {
-  WidgetRef _ref;
-  BuildContext _context;
+  // ignore: unused_field
+  final WidgetRef _ref;
+  // ignore: unused_field
+  final BuildContext _context;
 
   Page1(this._context, this._ref)
     : super(

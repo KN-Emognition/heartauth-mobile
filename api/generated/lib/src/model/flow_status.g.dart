@@ -6,6 +6,7 @@ part of 'flow_status.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const FlowStatus _$CREATED = const FlowStatus._('CREATED');
 const FlowStatus _$PENDING = const FlowStatus._('PENDING');
 const FlowStatus _$APPROVED = const FlowStatus._('APPROVED');
 const FlowStatus _$DENIED = const FlowStatus._('DENIED');
@@ -14,6 +15,8 @@ const FlowStatus _$NOT_FOUND = const FlowStatus._('NOT_FOUND');
 
 FlowStatus _$valueOf(String name) {
   switch (name) {
+    case 'CREATED':
+      return _$CREATED;
     case 'PENDING':
       return _$PENDING;
     case 'APPROVED':
@@ -30,6 +33,7 @@ FlowStatus _$valueOf(String name) {
 }
 
 final BuiltSet<FlowStatus> _$values = BuiltSet<FlowStatus>(const <FlowStatus>[
+  _$CREATED,
   _$PENDING,
   _$APPROVED,
   _$DENIED,
@@ -39,6 +43,7 @@ final BuiltSet<FlowStatus> _$values = BuiltSet<FlowStatus>(const <FlowStatus>[
 
 class _$FlowStatusMeta {
   const _$FlowStatusMeta();
+  FlowStatus get CREATED => _$CREATED;
   FlowStatus get PENDING => _$PENDING;
   FlowStatus get APPROVED => _$APPROVED;
   FlowStatus get DENIED => _$DENIED;
@@ -57,6 +62,7 @@ Serializer<FlowStatus> _$flowStatusSerializer = _$FlowStatusSerializer();
 
 class _$FlowStatusSerializer implements PrimitiveSerializer<FlowStatus> {
   static const Map<String, Object> _toWire = const <String, Object>{
+    'CREATED': 'CREATED',
     'PENDING': 'PENDING',
     'APPROVED': 'APPROVED',
     'DENIED': 'DENIED',
@@ -64,6 +70,7 @@ class _$FlowStatusSerializer implements PrimitiveSerializer<FlowStatus> {
     'NOT_FOUND': 'NOT_FOUND',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
+    'CREATED': 'CREATED',
     'PENDING': 'PENDING',
     'APPROVED': 'APPROVED',
     'DENIED': 'DENIED',

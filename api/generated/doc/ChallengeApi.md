@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **externalChallengeComplete**
-> ChallengeStatusResponse externalChallengeComplete(id, challengeCompleteRequest, dPoP)
+> StatusResponse externalChallengeComplete(id, challengeCompleteRequest)
 
 Complete a challenge from the device after ECG pass and signature verification.
 
@@ -24,12 +24,11 @@ Mobile app posts a signed assertion proving possession of the device key. Server
 import 'package:openapi_client/api.dart';
 
 final api = OpenapiClient().getChallengeApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | Challenge ID (UUID).
-final ChallengeCompleteRequest challengeCompleteRequest = {"assertionJwt":"eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGFsbGVuZ2VJZCI6Ijc5ZjFhODMzLTI...","matchScore":0.94,"biometricPassed":true}; // ChallengeCompleteRequest | 
-final String dPoP = dPoP_example; // String | Optional DPoP proof header (JWS). If present, validate proof-of-possession.
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final ChallengeCompleteRequest challengeCompleteRequest = ; // ChallengeCompleteRequest | 
 
 try {
-    final response = api.externalChallengeComplete(id, challengeCompleteRequest, dPoP);
+    final response = api.externalChallengeComplete(id, challengeCompleteRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ChallengeApi->externalChallengeComplete: $e\n');
@@ -40,13 +39,12 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **String**| Challenge ID (UUID). | 
+ **id** | **String**|  | 
  **challengeCompleteRequest** | [**ChallengeCompleteRequest**](ChallengeCompleteRequest.md)|  | 
- **dPoP** | **String**| Optional DPoP proof header (JWS). If present, validate proof-of-possession. | [optional] 
 
 ### Return type
 
-[**ChallengeStatusResponse**](ChallengeStatusResponse.md)
+[**StatusResponse**](StatusResponse.md)
 
 ### Authorization
 

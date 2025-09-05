@@ -1,16 +1,45 @@
-# hauth_mobile
+# HeartAuth Mobile App
 
-A new Flutter project.
+The HeartAuth Mobile App is the link between the user's physical ecg/ppg scanning device and the
+HeartAuth backend services. It allows users to authenticate themselves using biometric data
+collected from their devices.
 
-## Getting Started
+## Prerequisites
 
-This project is a starting point for a Flutter application.
+### Building:
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK
+- Dart SDK
+- A compatible IDE (e.g., Android Studio, VS Code)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Running:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- An Android or iOS device/emulator
+- HeartAuth backend services running and accessible
+- Network connectivity
+- A valid HeartAuth account
+- A supported ecg/ppg scanning device (Samsung Galaxy Watch 4 or later running WearOS with our
+  custom HeartAuth watch app installed)
+
+## Building the App
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/KN-Emognition/heartauth-mobile.git
+   cd heartauth-mobile
+   ```
+2. Install dependencies:
+   ```bash
+    flutter pub get
+    ```
+3. Configure environment variables:
+   - Create a `.env` file in the root directory.
+   - Add a `API_URL` variable with the URL of your HeartAuth backend services.
+4. Build the app:
+- For Android:
+   ```bash
+   flutter build apk
+   ```
+- For iOS:
+   ```bash
+    flutter build ios
+    ```

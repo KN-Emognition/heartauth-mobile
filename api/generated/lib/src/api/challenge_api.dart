@@ -10,7 +10,7 @@ import 'package:dio/dio.dart';
 
 import 'package:openapi_client/src/api_util.dart';
 import 'package:openapi_client/src/model/challenge_complete_request.dart';
-import 'package:openapi_client/src/model/challenge_status_response.dart';
+import 'package:openapi_client/src/model/status_response.dart';
 
 class ChallengeApi {
   final Dio _dio;
@@ -23,9 +23,8 @@ class ChallengeApi {
   /// Mobile app posts a signed assertion proving possession of the device key. Server validates signature (using stored public key), nonce, and policy.
   ///
   /// Parameters:
-  /// * [id] - Challenge ID (UUID).
+  /// * [id]
   /// * [challengeCompleteRequest]
-  /// * [dPoP] - Optional DPoP proof header (JWS). If present, validate proof-of-possession.
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -33,12 +32,11 @@ class ChallengeApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [ChallengeStatusResponse] as data
+  /// Returns a [Future] containing a [Response] with a [StatusResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ChallengeStatusResponse>> externalChallengeComplete({
+  Future<Response<StatusResponse>> externalChallengeComplete({
     required String id,
     required ChallengeCompleteRequest challengeCompleteRequest,
-    String? dPoP,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -53,7 +51,6 @@ class ChallengeApi {
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
-        if (dPoP != null) r'DPoP': dPoP,
         ...?headers,
       },
       extra: <String, dynamic>{
@@ -91,7 +88,7 @@ class ChallengeApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    ChallengeStatusResponse? _responseData;
+    StatusResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
@@ -99,8 +96,8 @@ class ChallengeApi {
           ? null
           : _serializers.deserialize(
               rawResponse,
-              specifiedType: const FullType(ChallengeStatusResponse),
-            ) as ChallengeStatusResponse;
+              specifiedType: const FullType(StatusResponse),
+            ) as StatusResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -111,7 +108,7 @@ class ChallengeApi {
       );
     }
 
-    return Response<ChallengeStatusResponse>(
+    return Response<StatusResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

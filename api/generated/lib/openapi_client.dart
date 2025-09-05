@@ -16,12 +16,10 @@ export 'package:openapi_client/src/api/pairing_api.dart';
 
 export 'package:openapi_client/src/model/attestation.dart';
 export 'package:openapi_client/src/model/challenge_complete_request.dart';
-export 'package:openapi_client/src/model/challenge_status_response.dart';
-export 'package:openapi_client/src/model/device_credential.dart';
+export 'package:openapi_client/src/model/encryption_algo.dart';
 export 'package:openapi_client/src/model/flow_status.dart';
 export 'package:openapi_client/src/model/pairing_confirm_request.dart';
-export 'package:openapi_client/src/model/pairing_confirm_response.dart';
 export 'package:openapi_client/src/model/pairing_init_request.dart';
 export 'package:openapi_client/src/model/pairing_init_response.dart';
-export 'package:openapi_client/src/model/pairing_init_response_policy.dart';
 export 'package:openapi_client/src/model/platform.dart';
+export 'package:openapi_client/src/model/status_response.dart';

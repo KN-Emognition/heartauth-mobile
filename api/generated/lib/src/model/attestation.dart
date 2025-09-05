@@ -62,14 +62,14 @@ class _$AttestationSerializer implements PrimitiveSerializer<Attestation> {
       yield r'verdict';
       yield serializers.serialize(
         object.verdict,
-        specifiedType: const FullType.nullable(String),
+        specifiedType: const FullType(String),
       );
     }
     if (object.payload != null) {
       yield r'payload';
       yield serializers.serialize(
         object.payload,
-        specifiedType: const FullType.nullable(
+        specifiedType: const FullType(
             BuiltMap, [FullType(String), FullType.nullable(JsonObject)]),
       );
     }
@@ -108,18 +108,16 @@ class _$AttestationSerializer implements PrimitiveSerializer<Attestation> {
         case r'verdict':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.verdict = valueDes;
           break;
         case r'payload':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(
+            specifiedType: const FullType(
                 BuiltMap, [FullType(String), FullType.nullable(JsonObject)]),
-          ) as BuiltMap<String, JsonObject?>?;
-          if (valueDes == null) continue;
+          ) as BuiltMap<String, JsonObject?>;
           result.payload.replace(valueDes);
           break;
         default:
