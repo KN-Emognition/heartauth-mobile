@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 
 # **externalPairingConfirm**
-> PairingConfirmResponse externalPairingConfirm(pairingConfirmRequest)
+> StatusResponse externalPairingConfirm(pairingConfirmRequest)
 
 Confirm device pairing by proving possession of the generated private key.
 
@@ -25,7 +25,7 @@ Device signs the server-provided nonce (and context) with its hardware-backed pr
 import 'package:openapi_client/api.dart';
 
 final api = OpenapiClient().getPairingApi();
-final PairingConfirmRequest pairingConfirmRequest = {"jti":"5b5c6a2f-2d3b-4c3b-8d8f-9f2e1e6f9c21","deviceId":"android:3f24a1c2","signature":"MEUCIE3...","alg":"ES256"}; // PairingConfirmRequest | 
+final PairingConfirmRequest pairingConfirmRequest = ; // PairingConfirmRequest | 
 
 try {
     final response = api.externalPairingConfirm(pairingConfirmRequest);
@@ -43,7 +43,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**PairingConfirmResponse**](PairingConfirmResponse.md)
+[**StatusResponse**](StatusResponse.md)
 
 ### Authorization
 
@@ -68,7 +68,7 @@ Mobile app calls this after scanning the QR on the Keycloak Required Action page
 import 'package:openapi_client/api.dart';
 
 final api = OpenapiClient().getPairingApi();
-final PairingInitRequest pairingInitRequest = {"deviceId":"android:3f24a1c2","displayName":"Pixel 8 Pro","publicKeyPem":"-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE...\n-----END PUBLIC KEY-----\n","fcmToken":"fcm_token_example","platform":"ANDROID","osVersion":"14","model":"Google Pixel 8 Pro","attestation":{"type":"play-integrity","verdict":"MEETS_DEVICE_INTEGRITY"}}; // PairingInitRequest | 
+final PairingInitRequest pairingInitRequest = ; // PairingInitRequest | 
 
 try {
     final response = api.externalPairingInit(pairingInitRequest);

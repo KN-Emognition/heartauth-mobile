@@ -1,4 +1,4 @@
-# openapi_client.model.PairingInitResponsePolicy
+# openapi_client.model.StatusResponse
 
 ## Load the model package
 ```dart
@@ -8,7 +8,8 @@ import 'package:openapi_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**deviceLimitRemaining** | **int** |  | [optional] 
+**status** | [**FlowStatus**](FlowStatus.md) |  | 
+**reason** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

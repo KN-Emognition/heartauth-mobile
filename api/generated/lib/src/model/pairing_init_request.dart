@@ -13,10 +13,10 @@ part 'pairing_init_request.g.dart';
 /// PairingInitRequest
 ///
 /// Properties:
-/// * [deviceId] - Stable device identifier.
+/// * [deviceId]
 /// * [displayName]
-/// * [publicKeyPem] - PEM-encoded ECDSA P-256 public key.
-/// * [fcmToken] - Firebase Cloud Messaging token.
+/// * [publicKeyPem]
+/// * [fcmToken]
 /// * [platform]
 /// * [osVersion]
 /// * [model]
@@ -24,18 +24,15 @@ part 'pairing_init_request.g.dart';
 @BuiltValue()
 abstract class PairingInitRequest
     implements Built<PairingInitRequest, PairingInitRequestBuilder> {
-  /// Stable device identifier.
   @BuiltValueField(wireName: r'deviceId')
   String get deviceId;
 
   @BuiltValueField(wireName: r'displayName')
   String get displayName;
 
-  /// PEM-encoded ECDSA P-256 public key.
   @BuiltValueField(wireName: r'publicKeyPem')
   String get publicKeyPem;
 
-  /// Firebase Cloud Messaging token.
   @BuiltValueField(wireName: r'fcmToken')
   String get fcmToken;
 
@@ -107,14 +104,14 @@ class _$PairingInitRequestSerializer
       yield r'osVersion';
       yield serializers.serialize(
         object.osVersion,
-        specifiedType: const FullType.nullable(String),
+        specifiedType: const FullType(String),
       );
     }
     if (object.model != null) {
       yield r'model';
       yield serializers.serialize(
         object.model,
-        specifiedType: const FullType.nullable(String),
+        specifiedType: const FullType(String),
       );
     }
     if (object.attestation != null) {
@@ -187,17 +184,15 @@ class _$PairingInitRequestSerializer
         case r'osVersion':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.osVersion = valueDes;
           break;
         case r'model':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.model = valueDes;
           break;
         case r'attestation':

@@ -10,7 +10,7 @@ void main() {
     //
     // Mobile app posts a signed assertion proving possession of the device key. Server validates signature (using stored public key), nonce, and policy.
     //
-    //Future<ChallengeStatusResponse> externalChallengeComplete(String id, ChallengeCompleteRequest challengeCompleteRequest, { String dPoP }) async
+    //Future<StatusResponse> externalChallengeComplete(String id, ChallengeCompleteRequest challengeCompleteRequest) async
     test('test externalChallengeComplete', () async {
       // TODO
     });

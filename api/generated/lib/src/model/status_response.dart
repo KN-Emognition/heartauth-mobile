@@ -3,57 +3,63 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:openapi_client/src/model/flow_status.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-part 'pairing_init_response_policy.g.dart';
+part 'status_response.g.dart';
 
-/// PairingInitResponsePolicy
+/// StatusResponse
 ///
 /// Properties:
-/// * [deviceLimitRemaining]
+/// * [status]
+/// * [reason]
 @BuiltValue()
-abstract class PairingInitResponsePolicy
-    implements
-        Built<PairingInitResponsePolicy, PairingInitResponsePolicyBuilder> {
-  @BuiltValueField(wireName: r'deviceLimitRemaining')
-  int? get deviceLimitRemaining;
+abstract class StatusResponse
+    implements Built<StatusResponse, StatusResponseBuilder> {
+  @BuiltValueField(wireName: r'status')
+  FlowStatus get status;
+  // enum statusEnum {  CREATED,  PENDING,  APPROVED,  DENIED,  EXPIRED,  NOT_FOUND,  };
 
-  PairingInitResponsePolicy._();
+  @BuiltValueField(wireName: r'reason')
+  String? get reason;
 
-  factory PairingInitResponsePolicy(
-          [void updates(PairingInitResponsePolicyBuilder b)]) =
-      _$PairingInitResponsePolicy;
+  StatusResponse._();
+
+  factory StatusResponse([void updates(StatusResponseBuilder b)]) =
+      _$StatusResponse;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(PairingInitResponsePolicyBuilder b) => b;
+  static void _defaults(StatusResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<PairingInitResponsePolicy> get serializer =>
-      _$PairingInitResponsePolicySerializer();
+  static Serializer<StatusResponse> get serializer =>
+      _$StatusResponseSerializer();
 }
 
-class _$PairingInitResponsePolicySerializer
-    implements PrimitiveSerializer<PairingInitResponsePolicy> {
+class _$StatusResponseSerializer
+    implements PrimitiveSerializer<StatusResponse> {
   @override
-  final Iterable<Type> types = const [
-    PairingInitResponsePolicy,
-    _$PairingInitResponsePolicy
-  ];
+  final Iterable<Type> types = const [StatusResponse, _$StatusResponse];
 
   @override
-  final String wireName = r'PairingInitResponsePolicy';
+  final String wireName = r'StatusResponse';
 
   Iterable<Object?> _serializeProperties(
     Serializers serializers,
-    PairingInitResponsePolicy object, {
+    StatusResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    if (object.deviceLimitRemaining != null) {
-      yield r'deviceLimitRemaining';
+    yield r'status';
+    yield serializers.serialize(
+      object.status,
+      specifiedType: const FullType(FlowStatus),
+    );
+    if (object.reason != null) {
+      yield r'reason';
       yield serializers.serialize(
-        object.deviceLimitRemaining,
-        specifiedType: const FullType(int),
+        object.reason,
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -61,7 +67,7 @@ class _$PairingInitResponsePolicySerializer
   @override
   Object serialize(
     Serializers serializers,
-    PairingInitResponsePolicy object, {
+    StatusResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
     return _serializeProperties(serializers, object,
@@ -74,19 +80,26 @@ class _$PairingInitResponsePolicySerializer
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
     required List<Object?> serializedList,
-    required PairingInitResponsePolicyBuilder result,
+    required StatusResponseBuilder result,
     required List<Object?> unhandled,
   }) {
     for (var i = 0; i < serializedList.length; i += 2) {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'deviceLimitRemaining':
+        case r'status':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.deviceLimitRemaining = valueDes;
+            specifiedType: const FullType(FlowStatus),
+          ) as FlowStatus;
+          result.status = valueDes;
+          break;
+        case r'reason':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.reason = valueDes;
           break;
         default:
           unhandled.add(key);
@@ -97,12 +110,12 @@ class _$PairingInitResponsePolicySerializer
   }
 
   @override
-  PairingInitResponsePolicy deserialize(
+  StatusResponse deserialize(
     Serializers serializers,
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    final result = PairingInitResponsePolicyBuilder();
+    final result = StatusResponseBuilder();
     final serializedList = (serialized as Iterable<Object?>).toList();
     final unhandled = <Object?>[];
     _deserializeProperties(

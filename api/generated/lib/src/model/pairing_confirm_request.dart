@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
+import 'package:openapi_client/src/model/encryption_algo.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -12,30 +12,21 @@ part 'pairing_confirm_request.g.dart';
 /// PairingConfirmRequest
 ///
 /// Properties:
-/// * [jti]
 /// * [deviceId]
-/// * [signature] - Base64url DER ECDSA over SHA-256(nonce||jti||deviceId).
+/// * [signature]
 /// * [alg]
-/// * [dpop]
 @BuiltValue()
 abstract class PairingConfirmRequest
     implements Built<PairingConfirmRequest, PairingConfirmRequestBuilder> {
-  @BuiltValueField(wireName: r'jti')
-  String get jti;
-
   @BuiltValueField(wireName: r'deviceId')
   String get deviceId;
 
-  /// Base64url DER ECDSA over SHA-256(nonce||jti||deviceId).
   @BuiltValueField(wireName: r'signature')
   String get signature;
 
   @BuiltValueField(wireName: r'alg')
-  PairingConfirmRequestAlgEnum get alg;
+  EncryptionAlgo get alg;
   // enum algEnum {  ES256,  };
-
-  @BuiltValueField(wireName: r'dpop')
-  String? get dpop;
 
   PairingConfirmRequest._();
 
@@ -66,11 +57,6 @@ class _$PairingConfirmRequestSerializer
     PairingConfirmRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'jti';
-    yield serializers.serialize(
-      object.jti,
-      specifiedType: const FullType(String),
-    );
     yield r'deviceId';
     yield serializers.serialize(
       object.deviceId,
@@ -84,15 +70,8 @@ class _$PairingConfirmRequestSerializer
     yield r'alg';
     yield serializers.serialize(
       object.alg,
-      specifiedType: const FullType(PairingConfirmRequestAlgEnum),
+      specifiedType: const FullType(EncryptionAlgo),
     );
-    if (object.dpop != null) {
-      yield r'dpop';
-      yield serializers.serialize(
-        object.dpop,
-        specifiedType: const FullType.nullable(String),
-      );
-    }
   }
 
   @override
@@ -118,13 +97,6 @@ class _$PairingConfirmRequestSerializer
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'jti':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.jti = valueDes;
-          break;
         case r'deviceId':
           final valueDes = serializers.deserialize(
             value,
@@ -142,17 +114,9 @@ class _$PairingConfirmRequestSerializer
         case r'alg':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(PairingConfirmRequestAlgEnum),
-          ) as PairingConfirmRequestAlgEnum;
+            specifiedType: const FullType(EncryptionAlgo),
+          ) as EncryptionAlgo;
           result.alg = valueDes;
-          break;
-        case r'dpop':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
-          result.dpop = valueDes;
           break;
         default:
           unhandled.add(key);
@@ -181,20 +145,4 @@ class _$PairingConfirmRequestSerializer
     );
     return result.build();
   }
-}
-
-class PairingConfirmRequestAlgEnum extends EnumClass {
-  @BuiltValueEnumConst(wireName: r'ES256')
-  static const PairingConfirmRequestAlgEnum eS256 =
-      _$pairingConfirmRequestAlgEnum_eS256;
-
-  static Serializer<PairingConfirmRequestAlgEnum> get serializer =>
-      _$pairingConfirmRequestAlgEnumSerializer;
-
-  const PairingConfirmRequestAlgEnum._(String name) : super(name);
-
-  static BuiltSet<PairingConfirmRequestAlgEnum> get values =>
-      _$pairingConfirmRequestAlgEnumValues;
-  static PairingConfirmRequestAlgEnum valueOf(String name) =>
-      _$pairingConfirmRequestAlgEnumValueOf(name);
 }

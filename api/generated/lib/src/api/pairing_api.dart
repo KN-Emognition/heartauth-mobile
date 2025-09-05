@@ -9,9 +9,9 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:openapi_client/src/model/pairing_confirm_request.dart';
-import 'package:openapi_client/src/model/pairing_confirm_response.dart';
 import 'package:openapi_client/src/model/pairing_init_request.dart';
 import 'package:openapi_client/src/model/pairing_init_response.dart';
+import 'package:openapi_client/src/model/status_response.dart';
 
 class PairingApi {
   final Dio _dio;
@@ -32,9 +32,9 @@ class PairingApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [PairingConfirmResponse] as data
+  /// Returns a [Future] containing a [Response] with a [StatusResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<PairingConfirmResponse>> externalPairingConfirm({
+  Future<Response<StatusResponse>> externalPairingConfirm({
     required PairingConfirmRequest pairingConfirmRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -84,7 +84,7 @@ class PairingApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    PairingConfirmResponse? _responseData;
+    StatusResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
@@ -92,8 +92,8 @@ class PairingApi {
           ? null
           : _serializers.deserialize(
               rawResponse,
-              specifiedType: const FullType(PairingConfirmResponse),
-            ) as PairingConfirmResponse;
+              specifiedType: const FullType(StatusResponse),
+            ) as StatusResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -104,7 +104,7 @@ class PairingApi {
       );
     }
 
-    return Response<PairingConfirmResponse>(
+    return Response<StatusResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

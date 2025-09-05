@@ -11,6 +11,10 @@ part 'flow_status.g.dart';
 
 class FlowStatus extends EnumClass {
   /// Lifecycle state of a challenge.
+  @BuiltValueEnumConst(wireName: r'CREATED')
+  static const FlowStatus CREATED = _$CREATED;
+
+  /// Lifecycle state of a challenge.
   @BuiltValueEnumConst(wireName: r'PENDING')
   static const FlowStatus PENDING = _$PENDING;
 
