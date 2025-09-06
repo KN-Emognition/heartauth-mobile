@@ -111,7 +111,7 @@ class PairingScreen extends HookConsumerWidget {
           initResult.data!,
         );
 
-        Response<StatusResponse>? confirmResult;
+        Response<void>? confirmResult;
         try {
           confirmResult = await api.run(
             (client) => client.getPairingApi().externalPairingConfirm(
@@ -137,7 +137,7 @@ class PairingScreen extends HookConsumerWidget {
 
         await preferences.setBool('isPaired', true);
         if (context.mounted) {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               opaque: false,
               pageBuilder: (_, _, _) =>
