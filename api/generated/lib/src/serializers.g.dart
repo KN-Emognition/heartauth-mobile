@@ -11,12 +11,10 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(AttestationTypeEnum.serializer)
       ..add(ChallengeCompleteRequest.serializer)
       ..add(EncryptionAlgo.serializer)
-      ..add(FlowStatus.serializer)
       ..add(PairingConfirmRequest.serializer)
       ..add(PairingInitRequest.serializer)
       ..add(PairingInitResponse.serializer)
       ..add(Platform.serializer)
-      ..add(StatusResponse.serializer)
       ..addBuilderFactory(
           const FullType(BuiltMap, const [
             const FullType(String),

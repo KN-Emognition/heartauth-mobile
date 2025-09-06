@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 
 # **externalPairingConfirm**
-> StatusResponse externalPairingConfirm(pairingConfirmRequest)
+> externalPairingConfirm(pairingConfirmRequest)
 
 Confirm device pairing by proving possession of the generated private key.
 
@@ -28,8 +28,7 @@ final api = OpenapiClient().getPairingApi();
 final PairingConfirmRequest pairingConfirmRequest = ; // PairingConfirmRequest | 
 
 try {
-    final response = api.externalPairingConfirm(pairingConfirmRequest);
-    print(response);
+    api.externalPairingConfirm(pairingConfirmRequest);
 } catch on DioException (e) {
     print('Exception when calling PairingApi->externalPairingConfirm: $e\n');
 }
@@ -43,7 +42,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**StatusResponse**](StatusResponse.md)
+void (empty response body)
 
 ### Authorization
 
@@ -52,7 +51,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
