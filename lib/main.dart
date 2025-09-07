@@ -104,7 +104,7 @@ class MyApp extends ConsumerWidget {
     final serverHealth = ref.watch(serverHealthProvider);
 
     return MaterialApp(
-      title: 'QR Scanner',
+      title: 'HeartAuth Mobile',
       navigatorKey: navigatorKey,
       theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
       routes: {

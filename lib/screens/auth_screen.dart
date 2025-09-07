@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:hauth_mobile/utils/challenge_data.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hauth_mobile/utils/challenge_data.dart';
 import 'package:hauth_mobile/providers/login_challenge_provider.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/widgets/circular_countdown.dart';
+import 'package:hauth_mobile/widgets/success_overlay.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -67,30 +68,48 @@ class AuthScreen extends ConsumerWidget {
                     Response<void>? response;
                     try {
                       response = await api.run(
-                            (client) =>
+                        (client) =>
                             client.getChallengeApi().externalChallengeComplete(
                               id: challenge.challengeId,
-                              challengeCompleteRequest: challengeCompleteRequest,
+                              challengeCompleteRequest:
+                                  challengeCompleteRequest,
                             ),
                       );
                     } on DioException catch (e) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('Failed to complete challenge: ${e.response?.data['error'] ?? e.message}')));
-                      return;
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Failed to complete challenge: ${e.response?.data['error'] ?? e.message}',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
                     }
 
                     if (response == null) {
                       return;
                     }
 
-                    if(context.mounted) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('Challenge completed successfully!')));
-                      Navigator.of(context).pop();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Challenge completed successfully!'),
+                        ),
+                      );
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return SuccessAnimationOverlay(
+                            onCompleted: () {
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        },
+                      );
                     }
-
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),

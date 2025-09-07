@@ -38,7 +38,9 @@ class PairingScreen extends HookConsumerWidget {
 
         final parts = codeValue.split('.');
         if (parts.length != 3) {
-          print('Scanned code is not a JWT');
+          if (kDebugMode) {
+            print('Scanned code is not a JWT');
+          }
           return; // Not a JWT, do nothing
         }
 
@@ -49,6 +51,10 @@ class PairingScreen extends HookConsumerWidget {
         final displayNameController = TextEditingController(
           text: defaultDisplayName,
         );
+
+        if (!context.mounted) {
+          return;
+        }
 
         // Show confirmation dialog with display name input
         final confirmed = await showDialog<bool>(
@@ -97,13 +103,15 @@ class PairingScreen extends HookConsumerWidget {
               'Pairing initialization failed: ${e.response?.statusCode} ${e.response?.data['error']}',
             );
           }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
 
         if (initResult == null) {
@@ -129,13 +137,15 @@ class PairingScreen extends HookConsumerWidget {
               'Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',
             );
           }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
 
         if (confirmResult == null) {
@@ -144,16 +154,22 @@ class PairingScreen extends HookConsumerWidget {
 
         await preferences.setBool('isPaired', true);
         if (context.mounted) {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              opaque: false,
-              pageBuilder: (_, _, _) =>
-                  const SuccessAnimationOverlay(nextRoute: '/home'),
-            ),
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            // Prevents closing the dialog by tapping outside
+            builder: (context) {
+              return SuccessAnimationOverlay(
+                onCompleted: () async {
+                  await cameraController.stop();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  }
+                },
+              );
+            },
           );
-
-          // Stop the scanner
-          await cameraController.stop();
         }
       },
     );

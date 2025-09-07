@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lottie/lottie.dart';
+import 'package:hauth_mobile/theme.dart';
 
 class SuccessAnimationOverlay extends HookWidget {
-  final String nextRoute;
+  final void Function()? onCompleted;
 
-  const SuccessAnimationOverlay({super.key, required this.nextRoute});
+  const SuccessAnimationOverlay({super.key, this.onCompleted});
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +15,21 @@ class SuccessAnimationOverlay extends HookWidget {
     useEffect(() {
       void listener(AnimationStatus status) {
         if (status == AnimationStatus.completed && context.mounted) {
-          Navigator.of(context).pushReplacementNamed(nextRoute);
+          onCompleted?.call();
         }
       }
 
       controller.addStatusListener(listener);
       return () => controller.removeStatusListener(listener);
-    }, [controller, nextRoute]);
+    }, [controller]);
 
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.black.withValues(alpha: 0.5),
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
             shape: BoxShape.circle,
           ),
           child: Lottie.asset(

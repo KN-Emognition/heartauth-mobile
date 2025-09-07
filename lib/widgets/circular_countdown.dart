@@ -26,8 +26,10 @@ class CircularCountdown extends ConsumerWidget {
 
     Widget buildContent(Duration remaining, double actualSize) {
       final secondsLeft = remaining.inSeconds;
-      final progress =
-      (remaining.inMilliseconds / (period * 1000)).clamp(0.0, 1.0);
+      final progress = (remaining.inMilliseconds / (period * 1000)).clamp(
+        0.0,
+        1.0,
+      );
 
       return Stack(
         alignment: Alignment.center,
@@ -36,9 +38,11 @@ class CircularCountdown extends ConsumerWidget {
             child: CircularProgressIndicator(
               value: progress,
               strokeWidth: actualSize * 0.08, // thinner stroke relative to size
-              backgroundColor: Colors.grey.shade300,
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               valueColor: AlwaysStoppedAnimation<Color>(
-                secondsLeft < 5 ? Colors.red : Colors.blue,
+                secondsLeft < 5
+                    ? Theme.of(context).colorScheme.error
+                    : Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
@@ -77,9 +81,8 @@ class CircularCountdown extends ConsumerWidget {
         }
       },
       loading: () => const CircularProgressIndicator(),
-      error: (e, _) => const Icon(Icons.error, color: Colors.red),
+      error: (e, _) =>
+          Icon(Icons.error, color: Theme.of(context).colorScheme.error),
     );
   }
 }
-
-

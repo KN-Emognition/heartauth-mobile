@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'firebase_options.dart';
 
 typedef FcmMsg = void Function(RemoteMessage m);
@@ -29,7 +28,9 @@ Future<void> fcmInit({
   await fm.requestPermission(alert: true, badge: true, sound: true);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true, badge: true, sound: true,
+    alert: true,
+    badge: true,
+    sound: true,
   );
 
   final t = await fm.getToken();
