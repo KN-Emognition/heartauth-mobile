@@ -16,11 +16,11 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
   Timer? _expiryTimer;
 
   LoginChallengeNotifier(this._prefs) : super(null) {
-    _loadChallenge();
+    loadChallenge();
   }
 
   // Load the challenge from SharedPreferences
-  void _loadChallenge() {
+  void loadChallenge() {
     final challengeId = _prefs.getString('challengeId');
     final expiresAt = _prefs.getInt('expiresAt');
     final ttl = _prefs.getInt('ttl');

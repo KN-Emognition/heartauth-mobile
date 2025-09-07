@@ -72,8 +72,40 @@ void main() async {
   runApp(UncontrolledProviderScope(container: container, child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Manually trigger the challenge to load from SharedPreferences
+      if (kDebugMode) {
+        print("App resumed, checking for cached challenge...");
+      }
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.reload().then((value) {
+          ref.invalidate(loginChallengeProvider);
+        });
+      });
+    }
+  }
 
   Future<Widget> _getHome(WidgetRef ref) async {
     final prefs = await SharedPreferences.getInstance();
@@ -100,7 +132,7 @@ class MyApp extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final serverHealth = ref.watch(serverHealthProvider);
 
     return MaterialApp(
