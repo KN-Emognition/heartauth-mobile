@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class SuccessAnimationOverlay extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lottie/lottie.dart';
+
+class SuccessAnimationOverlay extends HookWidget {
   final String nextRoute;
 
   const SuccessAnimationOverlay({super.key, required this.nextRoute});
 
   @override
-  _SuccessAnimationOverlayState createState() =>
-      _SuccessAnimationOverlayState();
-}
-
-class _SuccessAnimationOverlayState extends State<SuccessAnimationOverlay> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Wait for the animation, then go to next screen
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacementNamed(widget.nextRoute);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = useAnimationController();
+
+    useEffect(() {
+      void listener(AnimationStatus status) {
+        if (status == AnimationStatus.completed && context.mounted) {
+          Navigator.of(context).pushReplacementNamed(nextRoute);
+        }
+      }
+
+      controller.addStatusListener(listener);
+      return () => controller.removeStatusListener(listener);
+    }, [controller, nextRoute]);
+
     return Scaffold(
       backgroundColor: Colors.black54,
       body: Center(
@@ -37,6 +36,11 @@ class _SuccessAnimationOverlayState extends State<SuccessAnimationOverlay> {
           ),
           child: Lottie.asset(
             'assets/animations/success.json',
+            controller: controller,
+            onLoaded: (composition) {
+              controller.duration = composition.duration;
+              controller.forward();
+            },
             repeat: false,
             width: 120,
             height: 120,

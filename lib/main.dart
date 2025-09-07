@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:toastification/toastification.dart';
 import 'package:hauth_mobile/fcm/fcm_bootstrap.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/providers/server_health_provider.dart';
@@ -28,9 +27,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
 
   final container = ProviderContainer(
-    overrides: [
-      sharedPreferencesProvider.overrideWithValue(prefs),
-    ],
+    overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
   );
 
   void handleMessage(RemoteMessage message, String context) {
@@ -72,12 +69,7 @@ void main() async {
     onOpened: (m) => handleMessage(m, 'OPENED'),
     onInitial: (m) => handleMessage(m, 'INITIAL'),
   );
-  runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: MyApp(),
-    ),
-  );
+  runApp(UncontrolledProviderScope(container: container, child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -111,36 +103,34 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final serverHealth = ref.watch(serverHealthProvider);
 
-    return ToastificationWrapper(
-      child: MaterialApp(
-        title: 'QR Scanner',
-        navigatorKey: navigatorKey,
-        theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
-        routes: {
-          '/home': (context) => const HomeScreen(),
-          '/auth': (context) => const AuthScreen(),
-          '/pairing': (context) => const PairingScreen(),
-          '/about': (context) => const AboutScreen(),
-          '/error': (context) => const ErrorScreen(),
-        },
-        home: serverHealth == ServerHealthStatus.unhealthy
-            ? const ErrorScreen(
-                errorText:
-                    "There was an error while trying to reach our servers. Please try again later.",
-              )
-            : FutureBuilder<Widget>(
-                future: _getHome(ref),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return snapshot.data!;
-                  } else {
-                    return const Scaffold(
-                      body: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                },
-              ),
-      ),
+    return MaterialApp(
+      title: 'QR Scanner',
+      navigatorKey: navigatorKey,
+      theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/auth': (context) => const AuthScreen(),
+        '/pairing': (context) => const PairingScreen(),
+        '/about': (context) => const AboutScreen(),
+        '/error': (context) => const ErrorScreen(),
+      },
+      home: serverHealth == ServerHealthStatus.unhealthy
+          ? const ErrorScreen(
+              errorText:
+                  "There was an error while trying to reach our servers. Please try again later.",
+            )
+          : FutureBuilder<Widget>(
+              future: _getHome(ref),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return snapshot.data!;
+                } else {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+              },
+            ),
     );
   }
 }

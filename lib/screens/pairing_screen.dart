@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/utils/pairing_data.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
-import 'package:toastification/toastification.dart';
 
 class PairingScreen extends HookConsumerWidget {
   const PairingScreen({super.key});
@@ -94,12 +93,16 @@ class PairingScreen extends HookConsumerWidget {
           );
         } on DioException catch (e) {
           if (kDebugMode) {
-            print('Pairing initialization failed: ${e.response?.statusCode} ${e.response?.data['error']}');
+            print(
+              'Pairing initialization failed: ${e.response?.statusCode} ${e.response?.data['error']}',
+            );
           }
-          toastification.show(
-            title: Text('Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}'),
-            type: ToastificationType.error,
-            autoCloseDuration: const Duration(seconds: 5)
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+              ),
+            ),
           );
         }
 
@@ -122,12 +125,16 @@ class PairingScreen extends HookConsumerWidget {
           );
         } on DioException catch (e) {
           if (kDebugMode) {
-            print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}');
+            print(
+              'Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',
+            );
           }
-          toastification.show(
-              title: Text('Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}'),
-              type: ToastificationType.error,
-              autoCloseDuration: const Duration(seconds: 5)
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+              ),
+            ),
           );
         }
 
