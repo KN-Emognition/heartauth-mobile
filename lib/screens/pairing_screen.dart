@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/utils/pairing_data.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
-import 'package:toastification/toastification.dart';
 
 class PairingScreen extends HookConsumerWidget {
   const PairingScreen({super.key});
@@ -39,7 +38,9 @@ class PairingScreen extends HookConsumerWidget {
 
         final parts = codeValue.split('.');
         if (parts.length != 3) {
-          print('Scanned code is not a JWT');
+          if (kDebugMode) {
+            print('Scanned code is not a JWT');
+          }
           return; // Not a JWT, do nothing
         }
 
@@ -50,6 +51,10 @@ class PairingScreen extends HookConsumerWidget {
         final displayNameController = TextEditingController(
           text: defaultDisplayName,
         );
+
+        if (!context.mounted) {
+          return;
+        }
 
         // Show confirmation dialog with display name input
         final confirmed = await showDialog<bool>(
@@ -94,13 +99,19 @@ class PairingScreen extends HookConsumerWidget {
           );
         } on DioException catch (e) {
           if (kDebugMode) {
-            print('Pairing initialization failed: ${e.response?.statusCode} ${e.response?.data['error']}');
+            print(
+              'Pairing initialization failed: ${e.response?.statusCode} ${e.response?.data['error']}',
+            );
           }
-          toastification.show(
-            title: Text('Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}'),
-            type: ToastificationType.error,
-            autoCloseDuration: const Duration(seconds: 5)
-          );
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+                ),
+              ),
+            );
+          }
         }
 
         if (initResult == null) {
@@ -111,7 +122,7 @@ class PairingScreen extends HookConsumerWidget {
           initResult.data!,
         );
 
-        Response<StatusResponse>? confirmResult;
+        Response<void>? confirmResult;
         try {
           confirmResult = await api.run(
             (client) => client.getPairingApi().externalPairingConfirm(
@@ -122,13 +133,19 @@ class PairingScreen extends HookConsumerWidget {
           );
         } on DioException catch (e) {
           if (kDebugMode) {
-            print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}');
+            print(
+              'Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',
+            );
           }
-          toastification.show(
-              title: Text('Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}'),
-              type: ToastificationType.error,
-              autoCloseDuration: const Duration(seconds: 5)
-          );
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+                ),
+              ),
+            );
+          }
         }
 
         if (confirmResult == null) {
@@ -137,16 +154,22 @@ class PairingScreen extends HookConsumerWidget {
 
         await preferences.setBool('isPaired', true);
         if (context.mounted) {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              opaque: false,
-              pageBuilder: (_, _, _) =>
-                  const SuccessAnimationOverlay(nextRoute: '/home'),
-            ),
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            // Prevents closing the dialog by tapping outside
+            builder: (context) {
+              return SuccessAnimationOverlay(
+                onCompleted: () async {
+                  await cameraController.stop();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  }
+                },
+              );
+            },
           );
-
-          // Stop the scanner
-          await cameraController.stop();
         }
       },
     );

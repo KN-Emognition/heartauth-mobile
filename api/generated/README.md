@@ -52,8 +52,7 @@ final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String |
 final ChallengeCompleteRequest challengeCompleteRequest = ; // ChallengeCompleteRequest | 
 
 try {
-    final response = await api.externalChallengeComplete(id, challengeCompleteRequest);
-    print(response);
+    api.externalChallengeComplete(id, challengeCompleteRequest);
 } catch on DioException (e) {
     print("Exception when calling ChallengeApi->externalChallengeComplete: $e\n");
 }
@@ -77,12 +76,10 @@ Class | Method | HTTP request | Description
  - [Attestation](doc/Attestation.md)
  - [ChallengeCompleteRequest](doc/ChallengeCompleteRequest.md)
  - [EncryptionAlgo](doc/EncryptionAlgo.md)
- - [FlowStatus](doc/FlowStatus.md)
  - [PairingConfirmRequest](doc/PairingConfirmRequest.md)
  - [PairingInitRequest](doc/PairingInitRequest.md)
  - [PairingInitResponse](doc/PairingInitResponse.md)
  - [Platform](doc/Platform.md)
- - [StatusResponse](doc/StatusResponse.md)
 
 
 ## Documentation For Authorization
