@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/utils/challenge_data.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/providers/login_challenge_provider.dart';
+import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/widgets/circular_countdown.dart';
 
 class AuthScreen extends ConsumerWidget {
@@ -9,6 +12,7 @@ class AuthScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final challenge = ref.watch(loginChallengeProvider);
+    final api = ref.read(apiClientProvider);
 
     ref.listen<LoginChallenge?>(loginChallengeProvider, (prev, next) {
       if (next == null) {
@@ -56,8 +60,37 @@ class AuthScreen extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: connect to wearOS ECG later
+                  onPressed: () async {
+                    final challengeCompleteRequest =
+                        await buildChallengeCompleteRequest();
+
+                    Response<void>? response;
+                    try {
+                      response = await api.run(
+                            (client) =>
+                            client.getChallengeApi().externalChallengeComplete(
+                              id: challenge.challengeId,
+                              challengeCompleteRequest: challengeCompleteRequest,
+                            ),
+                      );
+                    } on DioException catch (e) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('Failed to complete challenge: ${e.response?.data['error'] ?? e.message}')));
+                      return;
+                    }
+
+                    if (response == null) {
+                      return;
+                    }
+
+                    if(context.mounted) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('Challenge completed successfully!')));
+                      Navigator.of(context).pop();
+                    }
+
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),

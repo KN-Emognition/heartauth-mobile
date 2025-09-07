@@ -1,8 +1,9 @@
 import 'package:openapi_client/openapi_client.dart';
 
-Future<ChallengeCompleteRequest> buildChallengeCompleteRequest(
-    String challenge, String signature) async {
-  return ChallengeCompleteRequest((b) => b
-    ..challenge = challenge
-    ..signature = signature);
+Future<ChallengeCompleteRequest> buildChallengeCompleteRequest() async {
+  return ChallengeCompleteRequest(
+    (b) => b
+      ..anything = 'PLACEHOLDER' //TODO: replace with actual data
+      ..assertionJwt = 'PLACEHOLDER', //TODO: replace with actual data
+  );
 }
