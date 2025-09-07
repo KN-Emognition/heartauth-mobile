@@ -4,8 +4,8 @@ import 'package:hauth_mobile/providers/countdown_provider.dart';
 
 class CircularCountdown extends ConsumerWidget {
   final int expiryEpoch;
-  final int period; // e.g. 30s OTP cycle
-  final double? size; // optional fixed size
+  final int period;
+  final double? size;
 
   const CircularCountdown({
     super.key,
@@ -23,6 +23,7 @@ class CircularCountdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRemaining = ref.watch(countdownProvider(expiryEpoch));
+    final theme = Theme.of(context).colorScheme;
 
     Widget buildContent(Duration remaining, double actualSize) {
       final secondsLeft = remaining.inSeconds;
@@ -38,22 +39,25 @@ class CircularCountdown extends ConsumerWidget {
             child: CircularProgressIndicator(
               value: progress,
               strokeWidth: actualSize * 0.08, // thinner stroke relative to size
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              backgroundColor: theme.primaryContainer,
               valueColor: AlwaysStoppedAnimation<Color>(
                 secondsLeft < 5
-                    ? Theme.of(context).colorScheme.error
-                    : Theme.of(context).colorScheme.primary,
+                    ? theme.error
+                    : theme.primary,
               ),
             ),
           ),
           FittedBox(
-            child: Text(
-              _formatDuration(remaining),
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: actualSize * 0.25, // scales with widget size
+            child: Material(
+              child: Text(
+                _formatDuration(remaining),
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: actualSize * 0.25,
+                  color: theme.onSurface,
+                ),
               ),
-            ),
+            )
           ),
         ],
       );
@@ -82,7 +86,7 @@ class CircularCountdown extends ConsumerWidget {
       },
       loading: () => const CircularProgressIndicator(),
       error: (e, _) =>
-          Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+          Icon(Icons.error, color: theme.error),
     );
   }
 }

@@ -7,6 +7,7 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
     String? error = errorText;
     if(error == null) {
       // pull the error text from the arguments
@@ -17,20 +18,21 @@ class ErrorScreen extends StatelessWidget {
       error = args['errorText'] as String?;
     }
     return Scaffold(
+      backgroundColor: theme.surface,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.error_outline,
-              color: Colors.red,
+              color: theme.error,
               size: 64,
             ),
             SizedBox(height: 16),
             Text(
               error ?? 'An unknown error occurred.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, color: Colors.black),
+              style: TextStyle(fontSize: 18, color: theme.onSurface),
             ),
           ],
         ),
