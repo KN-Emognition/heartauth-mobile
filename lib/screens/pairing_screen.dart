@@ -17,22 +17,39 @@ class PairingScreen extends HookConsumerWidget {
     final MobileScannerController cameraController = MobileScannerController(
       facing: CameraFacing.back,
       torchEnabled: false,
-      formats: [BarcodeFormat.qrCode],
-      detectionSpeed: DetectionSpeed.noDuplicates,
+      formats: [BarcodeFormat.all],
+      detectionSpeed: DetectionSpeed.normal,
+      detectionTimeoutMs: 1000,
       returnImage: false,
     );
 
     final api = ref.read(apiClientProvider);
 
-    return MobileScanner(
+    final double scanSize = MediaQuery.of(context).size.width * 0.8;
+
+    final scanWindow = Rect.fromCenter(
+      center: MediaQuery.sizeOf(context).center(Offset.zero),
+      width: scanSize,
+      height: scanSize,
+    );
+
+    final scanner = MobileScanner(
       controller: cameraController,
+      scanWindow: scanWindow,
       onDetect: (code) async {
+        await cameraController.pause();
+
         if (code.barcodes.isEmpty) {
+          await cameraController.start();
           return;
         }
 
         final codeValue = code.barcodes.first.rawValue;
+        if (kDebugMode) {
+          print(codeValue);
+        }
         if (codeValue == null || codeValue.isEmpty) {
+          await cameraController.start();
           return;
         }
 
@@ -41,6 +58,7 @@ class PairingScreen extends HookConsumerWidget {
           if (kDebugMode) {
             print('Scanned code is not a JWT');
           }
+          await cameraController.start();
           return; // Not a JWT, do nothing
         }
 
@@ -53,6 +71,7 @@ class PairingScreen extends HookConsumerWidget {
         );
 
         if (!context.mounted) {
+          await cameraController.start();
           return;
         }
 
@@ -81,7 +100,10 @@ class PairingScreen extends HookConsumerWidget {
           ),
         );
 
-        if (confirmed != true) return;
+        if (confirmed != true) {
+          await cameraController.start();
+          return;
+        }
 
         // Save the (possibly updated) display name
         await preferences.setString('displayName', displayNameController.text);
@@ -112,9 +134,11 @@ class PairingScreen extends HookConsumerWidget {
               ),
             );
           }
+          await cameraController.start();
         }
 
         if (initResult == null) {
+          await cameraController.start();
           return;
         }
 
@@ -146,9 +170,11 @@ class PairingScreen extends HookConsumerWidget {
               ),
             );
           }
+          await cameraController.start();
         }
 
         if (confirmResult == null) {
+          await cameraController.start();
           return;
         }
 
@@ -172,6 +198,39 @@ class PairingScreen extends HookConsumerWidget {
           );
         }
       },
+    );
+
+    return Stack(
+      children: [
+        scanner,
+        ScanWindowOverlay(
+          controller: cameraController,
+          scanWindow: scanWindow,
+          borderRadius: BorderRadius.all(Radius.circular(scanSize * 0.05)),
+        ),
+        Positioned(
+          top: 40,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.transparent,
+              child: Material(
+                color: Colors.transparent,
+                child: Text(
+                  'Please align the pairing code within the frame',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
