@@ -122,12 +122,12 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         if (firstRun) {
           return const IntroScreen();
         } else if (!paired) {
-          return const PairingScreen();
+          return PairingScreen();
         } else {
           return const HomeScreen();
         }
       } else {
-        return const PairingScreen();
+        return PairingScreen();
       }
     } on Exception catch (e) {
       return ErrorScreen(errorText: e.toString());
@@ -145,7 +145,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       routes: {
         '/home': (context) => const HomeScreen(),
         '/auth': (context) => const AuthScreen(),
-        '/pairing': (context) => const PairingScreen(),
+        '/pairing': (context) => PairingScreen(),
         '/about': (context) => const AboutScreen(),
         '/error': (context) => const ErrorScreen(),
       },
