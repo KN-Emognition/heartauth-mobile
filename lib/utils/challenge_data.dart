@@ -1,4 +1,4 @@
-import 'package:openapi_client/openapi_client.dart';
+import 'package:hauth_api_external/hauth_api_external.dart';
 
 Future<ChallengeCompleteRequest> buildChallengeCompleteRequest() async {
   return ChallengeCompleteRequest(

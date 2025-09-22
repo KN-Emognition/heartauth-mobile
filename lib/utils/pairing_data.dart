@@ -1,4 +1,4 @@
-import 'package:openapi_client/openapi_client.dart';
+import 'package:hauth_api_external/hauth_api_external.dart';
 import 'package:pointycastle/export.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
