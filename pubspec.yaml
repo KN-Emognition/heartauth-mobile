@@ -59,11 +59,6 @@ dependencies:
       url: git@github.com:KN-Emognition/docs-and-gitops.git
       path: ./external
       ref: flutter-gen-03965c3
-  hauth_api_well_known:
-    git:
-      url: git@github.com:KN-Emognition/docs-and-gitops.git
-      path: ./well-known
-      ref: flutter-gen-03965c3
 dev_dependencies:
 
   build_runner: ^2.4.0

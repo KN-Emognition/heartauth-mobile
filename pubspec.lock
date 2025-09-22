@@ -545,15 +545,6 @@ packages:
       url: "git@github.com:KN-Emognition/docs-and-gitops.git"
     source: git
     version: "0.1.0"
-  hauth_api_well_known:
-    dependency: "direct main"
-    description:
-      path: well-known
-      ref: flutter-gen-03965c3
-      resolved-ref: "87c32e2ffc847e5e81244dc16460bbd96792392a"
-      url: "git@github.com:KN-Emognition/docs-and-gitops.git"
-    source: git
-    version: "0.1.0"
   hooks_riverpod:
     dependency: "direct main"
     description:
