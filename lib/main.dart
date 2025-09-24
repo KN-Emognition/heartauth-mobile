@@ -1,6 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/screens/watch_debug_screen.dart';
+import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,7 +25,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   await dotenv.load(fileName: ".env");
   await updateDeviceInfo();
-
+  await initWearLayer();
   final prefs = await SharedPreferences.getInstance();
 
   final container = ProviderContainer(
@@ -69,7 +71,8 @@ void main() async {
     onOpened: (m) => handleMessage(m, 'OPENED'),
     onInitial: (m) => handleMessage(m, 'INITIAL'),
   );
-  runApp(UncontrolledProviderScope(container: container, child: MyApp()));
+  // runApp(UncontrolledProviderScope(container: container, child: MyApp()));
+  runApp(const WatchDebugApp());
 }
 
 class MyApp extends ConsumerStatefulWidget {
