@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.emognition.hauth_mobile"
+    namespace = "knemognition.heartauth.mobile"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.emognition.hauth_mobile"
+        applicationId = "knemognition.heartauth.mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

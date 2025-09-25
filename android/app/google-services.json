@@ -8,9 +8,7 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:1017509602207:android:2bd16f47ea5ec205d293aa",
-        "android_client_info": {
-          "package_name": "com.emognition.hauth_mobile"
-        }
+        "android_client_info": { "package_name": "knemognition.heartauth.mobile" }
       },
       "oauth_client": [],
       "api_key": [
