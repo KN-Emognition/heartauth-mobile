@@ -7,6 +7,8 @@ import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/widgets/circular_countdown.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
 
+import '../watch/trigger_and_wait.dart';
+
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
 
@@ -82,9 +84,18 @@ class AuthScreen extends ConsumerWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
+                        final ttlMs = 60000;
+                        final measurementDurationMs = 10000;
+                        final expiresAtUtc =
+                            DateTime.now().toUtc().millisecondsSinceEpoch +
+                            ttlMs;
+
                         final challengeCompleteRequest =
                             await buildChallengeCompleteRequest(
-                              List.of([1.0, 2.0, 3.0, 4.0, 5.0]),
+                              (await triggerAndWait(
+                                measurementDurationMs: measurementDurationMs,
+                                expiresAt: expiresAtUtc,
+                              )).data,
                               challenge.ephemeralPublicKeyPem,
                               challenge.nonce,
                             );

@@ -9,6 +9,8 @@ import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/utils/pairing_data.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
 
+import '../watch/trigger_and_wait.dart';
+
 class PairingScreen extends HookConsumerWidget {
   PairingScreen({super.key});
 
@@ -118,19 +120,26 @@ class PairingScreen extends HookConsumerWidget {
       return;
     }
 
-    Response<JwkSet>? keyResponse;
-    try {
-      keyResponse = await api.run(
+        Response<JwkSet>? keyResponse;
+        try {
+          keyResponse = await api.run(
             (client) => client.getWellKnownApi().getJwks(),
-        true,
-      );
-    }on DioException catch (e){}
+            true,
+          );
+        } on DioException catch (e) {}
+        final ttlMs = 60000;
+        final measurementDurationMs = 10000;
+        final expiresAtUtc =
+            DateTime.now().toUtc().millisecondsSinceEpoch + ttlMs;
 
-    final confirmPairingData = await buildConfirmPairingRequest(
-      initResult.data!,
-      List.of([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
-        keyResponse!.data!
-    );
+        final confirmPairingData = await buildConfirmPairingRequest(
+          initResult.data!,
+          (await triggerAndWait(
+            measurementDurationMs: measurementDurationMs,
+            expiresAt: expiresAtUtc,
+          )).data,
+          keyResponse!.data!,
+        );
 
     Response<void>? confirmResult;
     try {
