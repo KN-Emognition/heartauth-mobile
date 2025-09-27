@@ -120,26 +120,47 @@ class PairingScreen extends HookConsumerWidget {
       return;
     }
 
-        Response<JwkSet>? keyResponse;
-        try {
-          keyResponse = await api.run(
-            (client) => client.getWellKnownApi().getJwks(),
-            true,
-          );
-        } on DioException catch (e) {}
-        final ttlMs = 60000;
-        final measurementDurationMs = 10000;
-        final expiresAtUtc =
-            DateTime.now().toUtc().millisecondsSinceEpoch + ttlMs;
-
-        final confirmPairingData = await buildConfirmPairingRequest(
-          initResult.data!,
-          (await triggerAndWait(
-            measurementDurationMs: measurementDurationMs,
-            expiresAt: expiresAtUtc,
-          )).data,
-          keyResponse!.data!,
+    Response<JwkSet>? keyResponse;
+    try {
+      keyResponse = await api.run(
+        (client) => client.getWellKnownApi().getJwks(),
+        true,
+      );
+    } on DioException catch (e) {
+      if (kDebugMode) {
+        print(
+          'JWKS fetching failed: ${e.response?.statusCode} ${e.response?.data['error']}',
         );
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+            ),
+          ),
+        );
+      }
+      await controller.resumeCamera();
+    }
+
+    if (keyResponse == null) {
+      await controller.resumeCamera();
+      return;
+    }
+
+    final ttlMs = 60000;
+    final measurementDurationMs = 10000;
+    final expiresAtUtc = DateTime.now().toUtc().millisecondsSinceEpoch + ttlMs;
+
+    final confirmPairingData = await buildConfirmPairingRequest(
+      initResult.data!,
+      (await triggerAndWait(
+        measurementDurationMs: measurementDurationMs,
+        expiresAt: expiresAtUtc,
+      )).data,
+      keyResponse.data!,
+    );
 
     Response<void>? confirmResult;
     try {
