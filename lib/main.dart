@@ -40,6 +40,8 @@ void main() async {
     final challengeId = message.data['challengeId'];
     final expiresAt = int.parse(message.data['exp']);
     final ttl = int.parse(message.data['ttl']);
+    final ephemeralPublicKeyPem = message.data['publicKey'];
+    final nonce = message.data['nonce'];
 
     // check if the challenge has not already expired
     final expiry = DateTime.fromMillisecondsSinceEpoch(expiresAt * 1000);
@@ -52,6 +54,8 @@ void main() async {
       challengeId: challengeId,
       expiresAt: expiresAt,
       ttl: ttl,
+      nonce: nonce,
+      ephemeralPublicKeyPem: ephemeralPublicKeyPem,
     );
 
     container.read(loginChallengeProvider.notifier).setChallenge(challenge);
@@ -71,8 +75,7 @@ void main() async {
     onOpened: (m) => handleMessage(m, 'OPENED'),
     onInitial: (m) => handleMessage(m, 'INITIAL'),
   );
-  // runApp(UncontrolledProviderScope(container: container, child: MyApp()));
-  runApp(const WatchDebugApp());
+  runApp(UncontrolledProviderScope(container: container, child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {

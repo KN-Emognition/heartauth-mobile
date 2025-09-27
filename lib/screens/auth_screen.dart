@@ -83,7 +83,11 @@ class AuthScreen extends ConsumerWidget {
                     child: ElevatedButton(
                       onPressed: () async {
                         final challengeCompleteRequest =
-                            await buildChallengeCompleteRequest();
+                            await buildChallengeCompleteRequest(
+                              List.of([1.0, 2.0, 3.0, 4.0, 5.0]),
+                              challenge.ephemeralPublicKeyPem,
+                              challenge.nonce,
+                            );
 
                         Response<void>? response;
                         try {

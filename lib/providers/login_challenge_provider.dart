@@ -7,8 +7,16 @@ class LoginChallenge {
   final String challengeId;
   final int expiresAt;
   final int ttl;
+  final String ephemeralPublicKeyPem;
+  final String nonce;
 
-  LoginChallenge({required this.challengeId, required this.expiresAt, required this.ttl});
+  LoginChallenge({
+    required this.challengeId,
+    required this.expiresAt,
+    required this.ttl,
+    required this.ephemeralPublicKeyPem,
+    required this.nonce,
+  });
 }
 
 class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
@@ -24,12 +32,19 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
     final challengeId = _prefs.getString('challengeId');
     final expiresAt = _prefs.getInt('expiresAt');
     final ttl = _prefs.getInt('ttl');
-
-    if (challengeId != null && expiresAt != null && ttl != null) {
+    final ephemeralPublicKeyPem = _prefs.getString('ephemeralPublicKey');
+    final nonce = _prefs.getString('nonce');
+    if (challengeId != null &&
+        expiresAt != null &&
+        ttl != null &&
+        ephemeralPublicKeyPem != null &&
+        nonce != null) {
       final challenge = LoginChallenge(
         challengeId: challengeId,
         expiresAt: expiresAt,
         ttl: ttl,
+        ephemeralPublicKeyPem: ephemeralPublicKeyPem,
+        nonce: nonce,
       );
       state = challenge;
       _startExpiryTimer(challenge.expiresAt);
@@ -41,6 +56,8 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
     await _prefs.setString('challengeId', challenge.challengeId);
     await _prefs.setInt('expiresAt', challenge.expiresAt);
     await _prefs.setInt('ttl', challenge.ttl);
+    await _prefs.setString('ephemeralPublicKey', challenge.ephemeralPublicKeyPem);
+    await _prefs.setString('nonce', challenge.nonce);
     state = challenge;
     _startExpiryTimer(challenge.expiresAt);
   }
@@ -50,6 +67,8 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
     await _prefs.remove('challengeId');
     await _prefs.remove('expiresAt');
     await _prefs.remove('ttl');
+    await _prefs.remove('ephemeralPublicKey');
+    await _prefs.remove('nonce');
     _expiryTimer?.cancel();
     state = null;
   }
@@ -58,7 +77,7 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
   void _startExpiryTimer(int expiresAt) {
     _expiryTimer?.cancel();
     final now = DateTime.now().millisecondsSinceEpoch;
-    final durationUntilExpiry = (expiresAt*1000) - now;
+    final durationUntilExpiry = (expiresAt * 1000) - now;
 
     if (durationUntilExpiry > 0) {
       _expiryTimer = Timer(Duration(milliseconds: durationUntilExpiry), () {
