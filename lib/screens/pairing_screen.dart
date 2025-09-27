@@ -118,8 +118,18 @@ class PairingScreen extends HookConsumerWidget {
       return;
     }
 
+    Response<JwkSet>? keyResponse;
+    try {
+      keyResponse = await api.run(
+            (client) => client.getWellKnownApi().getJwks(),
+        true,
+      );
+    }on DioException catch (e){}
+
     final confirmPairingData = await buildConfirmPairingRequest(
       initResult.data!,
+      List.of([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+        keyResponse!.data!
     );
 
     Response<void>? confirmResult;

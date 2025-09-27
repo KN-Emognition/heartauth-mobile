@@ -62,7 +62,7 @@ dependencies:
     git:
       url: git@github.com:KN-Emognition/docs-and-gitops.git
       path: ./external
-      ref: flutter-gen-d2db925
+      ref: flutter-gen-804d405
 dev_dependencies:
 
   build_runner: ^2.4.0

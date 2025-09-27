@@ -596,8 +596,8 @@ packages:
     dependency: "direct main"
     description:
       path: external
-      ref: flutter-gen-d2db925
-      resolved-ref: d5f67efc53871b541d83ebbeeaa5107ebddd84de
+      ref: flutter-gen-804d405
+      resolved-ref: "201f512a2959b7cb1ae3270c915a79f28f0a6a87"
       url: "git@github.com:KN-Emognition/docs-and-gitops.git"
     source: git
     version: "0.1.0"

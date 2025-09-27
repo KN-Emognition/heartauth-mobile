@@ -10,7 +10,7 @@ Future<ChallengeCompleteRequest> buildChallengeCompleteRequest(
 ) async {
   final signedNonce = await signNonce(nonce);
   final privateKey = await loadPrivateKey();
-  final encryptedData = await signThenEncryptECDHES(
+  final tokenData = await signThenEncryptECDHES(
     payload: {
       'data': "Hello from the other side",
       'refEcg': rawEcg,
@@ -19,10 +19,9 @@ Future<ChallengeCompleteRequest> buildChallengeCompleteRequest(
     recipientPublicKey: CryptoUtils.ecPublicKeyFromPem(ephemeralPublicKeyPem),
     senderPrivateKey: privateKey!,
   );
-  print('Encrypted challenge data: $encryptedData');
   return ChallengeCompleteRequest(
     (b) => b
-      ..data = encryptedData
+      ..dataToken = tokenData
       ..signature = signedNonce,
   );
 }
