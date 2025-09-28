@@ -154,7 +154,7 @@ class PairingScreen extends HookConsumerWidget {
       initResult.data!,
       (await triggerAndWait(
         measurementDurationMs: measurementDurationMs,
-        expiresAt: initResult.data!.expiresAt,
+        expiresAt: initResult.data!.expiresAt * 1000,
       )).data,
       keyResponse.data!,
     );

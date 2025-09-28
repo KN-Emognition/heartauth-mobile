@@ -83,17 +83,14 @@ class AuthScreen extends ConsumerWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        final ttlMs = 60000;
+
                         final measurementDurationMs = 10000;
-                        final expiresAtUtc =
-                            DateTime.now().toUtc().millisecondsSinceEpoch +
-                            ttlMs;
 
                         final challengeCompleteRequest =
                             await buildChallengeCompleteRequest(
                               (await triggerAndWait(
                                 measurementDurationMs: measurementDurationMs,
-                                expiresAt: expiresAtUtc,
+                                expiresAt: challenge.expiresAt * 1000,
                               )).data,
                               challenge.ephemeralPublicKeyPem,
                               challenge.nonce,
