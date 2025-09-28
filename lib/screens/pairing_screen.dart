@@ -150,13 +150,12 @@ class PairingScreen extends HookConsumerWidget {
 
     final ttlMs = 60000;
     final measurementDurationMs = 10000;
-    final expiresAtUtc = DateTime.now().toUtc().millisecondsSinceEpoch + ttlMs;
 
     final confirmPairingData = await buildConfirmPairingRequest(
       initResult.data!,
       (await triggerAndWait(
         measurementDurationMs: measurementDurationMs,
-        expiresAt: expiresAtUtc,
+        expiresAt: initResult.data!.expiresAt,
       )).data,
       keyResponse.data!,
     );
