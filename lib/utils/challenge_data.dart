@@ -1,7 +1,7 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:hauth_api_external/hauth_api_external.dart';
-import '../aes/ecrypt.dart';
-import 'encryption.dart';
+import 'package:hauth_mobile/utils/ecrypt.dart';
+import 'package:hauth_mobile/utils/encryption.dart';
 
 Future<ChallengeCompleteRequest> buildChallengeCompleteRequest(
   List<double> rawEcg,
@@ -9,16 +9,12 @@ Future<ChallengeCompleteRequest> buildChallengeCompleteRequest(
   String nonce,
 ) async {
   final signedNonce = await signNonce(nonce);
-  final privateKey = await loadPrivateKey();
-  final tokenData = await signThenEncryptECDHES(
-    payload: {
-      'data': "Hello from the other side",
-      'refEcg': rawEcg,
-      'testEcg': rawEcg,
-    },
-    recipientPublicKey: CryptoUtils.ecPublicKeyFromPem(ephemeralPublicKeyPem),
-    senderPrivateKey: privateKey!,
+
+  final tokenData = await createDataToken(
+    CryptoUtils.ecPublicKeyFromPem(ephemeralPublicKeyPem),
+    testEcg: rawEcg,
   );
+
   return ChallengeCompleteRequest(
     (b) => b
       ..dataToken = tokenData

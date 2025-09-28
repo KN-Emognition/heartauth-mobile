@@ -8,8 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/utils/pairing_data.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
-
-import '../watch/trigger_and_wait.dart';
+import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 
 class PairingScreen extends HookConsumerWidget {
   PairingScreen({super.key});

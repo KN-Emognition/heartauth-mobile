@@ -596,9 +596,9 @@ packages:
     dependency: "direct main"
     description:
       path: external
-      ref: flutter-gen-804d405
-      resolved-ref: "201f512a2959b7cb1ae3270c915a79f28f0a6a87"
-      url: "git@github.com:KN-Emognition/docs-and-gitops.git"
+      ref: flutter-gen-f22f2b1
+      resolved-ref: "305164bac3ad7a4acb075fa624100fa6b64c1e4d"
+      url: "https://github.com/KN-Emognition/docs-and-gitops.git"
     source: git
     version: "0.1.0"
   hooks_riverpod:

@@ -6,8 +6,7 @@ import 'package:hauth_mobile/providers/login_challenge_provider.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/widgets/circular_countdown.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
-
-import '../watch/trigger_and_wait.dart';
+import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
