@@ -148,7 +148,6 @@ class PairingScreen extends HookConsumerWidget {
       return;
     }
 
-    final ttlMs = 60000;
     final measurementDurationMs = 10000;
 
     final confirmPairingData = await buildConfirmPairingRequest(
