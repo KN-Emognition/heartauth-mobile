@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:hauth_mobile/watch/contract.dart';
-
-import '../watch/trigger_and_wait.dart';
+import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 
 class WatchDebugApp extends StatelessWidget {
   const WatchDebugApp({super.key});
