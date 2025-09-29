@@ -10,6 +10,8 @@ import 'package:hauth_mobile/utils/pairing_data.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
 import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 
+import '../constant.dart';
+
 class PairingScreen extends HookConsumerWidget {
   PairingScreen({super.key});
 
@@ -147,13 +149,10 @@ class PairingScreen extends HookConsumerWidget {
       await controller.resumeCamera();
       return;
     }
-
-    final measurementDurationMs = 10000;
-
     final confirmPairingData = await buildConfirmPairingRequest(
       initResult.data!,
       (await triggerAndWait(
-        measurementDurationMs: measurementDurationMs,
+        measurementDurationMs: HEARTAUTH_MEASUREMENT_DURATION,
         expiresAt: initResult.data!.expiresAt * 1000,
       )).data,
       keyResponse.data!,

@@ -39,8 +39,6 @@ Future<TriggerResponse> triggerAndWait({
     try {
       final raw = utf8.decode(msg.data);
       final map = jsonDecode(raw) as Map<String, dynamic>;
-      print('[triggerAndWait] rx from mobile @ ${msg.path} : $map');
-
       if (map['type'] == typeResult && map['id'] == req.id) {
         final resp = TriggerResponse.fromJson(map);
         if (!completer.isCompleted) completer.complete(resp);
