@@ -4,6 +4,15 @@ import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+Future<void> _saveBodyToFile(String id, String body) async {
+  final dir = await getApplicationDocumentsDirectory();
+  final file = File('${dir.path}/wear_message_$id.json');
+  await file.writeAsString(body);
+  print('[triggerAndWait] saved full body to ${file.path}');
+}
 
 final _uuid = const Uuid();
 final _wear = FlutterWearOsConnectivity();
@@ -35,10 +44,11 @@ Future<TriggerResponse> triggerAndWait({
   final completer = Completer<TriggerResponse>();
 
   late final StreamSubscription sub;
-  sub = _wear.messageReceived(pathURI: resultUri).listen((msg) {
+  sub = _wear.messageReceived(pathURI: resultUri).listen((msg) async {
     try {
       final raw = utf8.decode(msg.data);
       final map = jsonDecode(raw) as Map<String, dynamic>;
+      await _saveBodyToFile(req.id, map.toString());
       if (map['type'] == typeResult && map['id'] == req.id) {
         final resp = TriggerResponse.fromJson(map);
         if (!completer.isCompleted) completer.complete(resp);
