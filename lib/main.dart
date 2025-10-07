@@ -76,6 +76,7 @@ void main() async {
     onInitial: (m) => handleMessage(m, 'INITIAL'),
   );
   runApp(UncontrolledProviderScope(container: container, child: MyApp()));
+  //runApp(ProviderScope(child: WatchDebugApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
