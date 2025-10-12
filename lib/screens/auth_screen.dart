@@ -88,7 +88,8 @@ class AuthScreen extends ConsumerWidget {
                         final challengeCompleteRequest =
                             await buildChallengeCompleteRequest(
                               (await triggerAndWait(
-                                measurementDurationMs: HEARTAUTH_MEASUREMENT_DURATION,
+                                measurementDurationMs:
+                                    HEARTAUTH_MEASUREMENT_DURATION,
                                 expiresAt: challenge.expiresAt * 1000,
                               )).data,
                               challenge.ephemeralPublicKeyPem,
@@ -98,11 +99,10 @@ class AuthScreen extends ConsumerWidget {
                         Response<void>? response;
                         try {
                           response = await api.run(
-                            (client) => client
-                                .getChallengeApi()
-                                .externalChallengeComplete(
+                            (client) =>
+                                client.getChallengeApi().completeChallenge(
                                   id: challenge.challengeId,
-                                  challengeCompleteRequest:
+                                  completeChallengeRequest:
                                       challengeCompleteRequest,
                                 ),
                           );

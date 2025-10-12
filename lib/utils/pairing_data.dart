@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/utils/encryption.dart';
 
-Future<(PairingInitRequest, Map<String, dynamic>)> buildInitPairingRequest(
+Future<(InitPairingRequest, Map<String, dynamic>)> buildInitPairingRequest(
   String jwtToken,
 ) async {
   // Generate key pair
@@ -24,29 +24,29 @@ Future<(PairingInitRequest, Map<String, dynamic>)> buildInitPairingRequest(
   // final attestationToken = await getIntegrityToken();
   final attestationToken = "MEETS_DEVICE_INTEGRITY";
 
-  final attestationBuilder = AttestationBuilder();
-  attestationBuilder.type = AttestationTypeEnum.playIntegrity;
-  attestationBuilder.verdict = attestationToken;
+  // final attestationBuilder = AttestationBuilder();
+  // attestationBuilder.type = AttestationTypeEnum.playIntegrity;
+  // attestationBuilder.verdict = attestationToken;
 
   return (
-    PairingInitRequest(
+    InitPairingRequest(
       (b) => b
         ..deviceId = storage.getString("deviceId")
         ..displayName = storage.getString("displayName")
-        ..publicKeyPem = publicKeyPem
+        ..publicKey = publicKeyPem
         ..fcmToken = storage.getString('fcmToken')
         ..platform = Platform.ANDROID
         ..osVersion = storage.getString("osVersion")
-        ..model = storage.getString("model")
-        ..attestation = attestationBuilder,
+        ..model = storage.getString("model"),
+      // ..attestation = attestationBuilder,
     ),
     {"Authorization": "Bearer $jwtToken"},
   );
 }
 
-Future<(PairingConfirmRequest, Map<String, dynamic>)>
+Future<(CompletePairingRequest, Map<String, dynamic>)>
 buildConfirmPairingRequest(
-  PairingInitResponse initResponse,
+  InitPairingResponse initResponse,
   List<double> rawEcg,
   JwkSet set,
 ) async {
@@ -57,12 +57,10 @@ buildConfirmPairingRequest(
   final signature = await signNonce(initResponse.nonce);
 
   return (
-    PairingConfirmRequest(
+    CompletePairingRequest(
       (b) => b
-        ..deviceId = storage.getString("deviceId")
         ..dataToken = tokenData
-        ..signature = signature
-        ..alg = EncryptionAlgo.eS256,
+        ..signature = signature,
     ),
     {"Authorization": "Bearer ${storage.getString("tempJwt")}"},
   );

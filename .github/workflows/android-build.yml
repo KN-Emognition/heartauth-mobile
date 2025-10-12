@@ -91,5 +91,5 @@ jobs:
             build/app/outputs/flutter-apk/app-release-demo.apk
           token: ${{ github.token }}
           generate_release_notes: true
-          prerelease: false
+          prerelease: true
           draft: false
