@@ -61,8 +61,7 @@ dependencies:
   hauth_api_external:
     git:
       url: git@github.com:KN-Emognition/docs-and-gitops.git
-      path: ./external
-      ref: flutter-gen-f22f2b1
+      ref: external-client-fda2dcd
 dev_dependencies:
 
   build_runner: ^2.4.0

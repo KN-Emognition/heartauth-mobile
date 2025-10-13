@@ -89,11 +89,11 @@ class PairingScreen extends HookConsumerWidget {
 
     final pairingData = await buildInitPairingRequest(code.code!);
 
-    Response<PairingInitResponse>? initResult;
+    Response<InitPairingResponse>? initResult;
     try {
       initResult = await api.run(
-        (client) => client.getPairingApi().externalPairingInit(
-          pairingInitRequest: pairingData.$1,
+        (client) => client.getPairingApi().initPairing(
+          initPairingRequest: pairingData.$1,
           headers: pairingData.$2,
         ),
         true,
@@ -124,7 +124,7 @@ class PairingScreen extends HookConsumerWidget {
     Response<JwkSet>? keyResponse;
     try {
       keyResponse = await api.run(
-        (client) => client.getWellKnownApi().getJwks(),
+        (client) => client.getWellKnownApi().getWellKnown(),
         true,
       );
     } on DioException catch (e) {
@@ -161,8 +161,8 @@ class PairingScreen extends HookConsumerWidget {
     Response<void>? confirmResult;
     try {
       confirmResult = await api.run(
-        (client) => client.getPairingApi().externalPairingConfirm(
-          pairingConfirmRequest: confirmPairingData.$1,
+        (client) => client.getPairingApi().completePairing(
+          completePairingRequest: confirmPairingData.$1,
           headers: confirmPairingData.$2,
         ),
         true,

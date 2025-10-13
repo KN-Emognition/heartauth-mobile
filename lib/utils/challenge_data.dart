@@ -1,9 +1,8 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:hauth_api_external/hauth_api_external.dart';
-import 'package:hauth_mobile/utils/ecrypt.dart';
 import 'package:hauth_mobile/utils/encryption.dart';
 
-Future<ChallengeCompleteRequest> buildChallengeCompleteRequest(
+Future<CompleteChallengeRequest> buildChallengeCompleteRequest(
   List<double> rawEcg,
   String ephemeralPublicKeyPem,
   String nonce,
@@ -15,7 +14,7 @@ Future<ChallengeCompleteRequest> buildChallengeCompleteRequest(
     testEcg: rawEcg,
   );
 
-  return ChallengeCompleteRequest(
+  return CompleteChallengeRequest(
     (b) => b
       ..dataToken = tokenData
       ..signature = signedNonce,
