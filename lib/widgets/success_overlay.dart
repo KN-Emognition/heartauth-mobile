@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hauth_mobile/widgets/lottie_animation.dart';
 
 class SuccessAnimationOverlay extends HookWidget {
   final void Function()? onCompleted;
@@ -31,16 +31,9 @@ class SuccessAnimationOverlay extends HookWidget {
             color: Theme.of(context).colorScheme.surface,
             shape: BoxShape.circle,
           ),
-          child: Lottie.asset(
+          child: LottieAnimation(
             'assets/animations/success.json',
-            controller: controller,
-            onLoaded: (composition) {
-              controller.duration = composition.duration;
-              controller.forward();
-            },
-            repeat: false,
-            width: 120,
-            height: 120,
+            onCompleted: onCompleted,
           ),
         ),
       ),
