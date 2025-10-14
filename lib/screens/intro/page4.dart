@@ -60,7 +60,7 @@ class Page4 extends PageViewModel {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: currentStep == 1
+                    onPressed: true
                         ? () async {
                             openAppOrPlayStore('com.samsung.android.app.watchmanager', onError: (error) {
                               if (context.mounted) {

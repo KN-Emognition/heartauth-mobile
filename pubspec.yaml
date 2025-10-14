@@ -62,8 +62,8 @@ dependencies:
     git:
       url: git@github.com:KN-Emognition/docs-and-gitops.git
       ref: external-client-fda2dcd
-  device_apps: ^2.2.0
   url_launcher: ^6.3.2
+  external_app_launcher: ^4.0.3
 dev_dependencies:
 
   build_runner: ^2.4.0
