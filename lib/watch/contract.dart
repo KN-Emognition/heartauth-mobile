@@ -1,5 +1,7 @@
-const triggerPath = '/heartauth/v1/trigger';
-const resultPath = '/heartauth/v1/result';
+const triggerPath = '/heartauth/v1/auth/trigger';
+const resultPath = '/heartauth/v1/auth/result';
+const healthCheckTriggerPath = '/heartauth/v1/health/trigger';
+const healthCheckResultPath = '/heartauth/v1/health/result';
 
 const typeChallenge = 'challenge';
 const typeResult = 'result';

@@ -30,16 +30,24 @@ class FutureProviderViewBuilder<T> extends HookConsumerWidget {
             }
             navigator.pushNamed('/error', arguments: {'errorText': stacktrace.toString()});
 
-            return Scaffold(
-              backgroundColor: bgColor,
-              body: Center(
-                child: Text('Error: $error'),
+            return SizedBox(
+              width: 400,
+              height: 400,
+              child: Scaffold(
+                backgroundColor: bgColor,
+                body: Center(
+                  child: Text('Error: $error'),
+                ),
               ),
             );
           },
-          loading: () => Scaffold(
-            backgroundColor: bgColor,
-            body: Center(child: CircularProgressIndicator()),
+          loading: () => SizedBox(
+            width: 400,
+            height: 400,
+            child: Scaffold(
+              backgroundColor: bgColor,
+              body: Center(child: CircularProgressIndicator()),
+            ),
           ),
         );
       },

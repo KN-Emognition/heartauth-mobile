@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/utils/open_app.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -60,13 +62,17 @@ class Page4 extends PageViewModel {
                     ),
                     onPressed: currentStep == 1
                         ? () async {
-                            final status = await Permission.bluetoothConnect
-                                .request();
-
-                            if (status.isGranted) {
-                              // ignore: unused_result
-                              ref.refresh(currentStepProvider);
-                            }
+                            openAppOrPlayStore('com.samsung.android.app.watchmanager', onError: (error) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Failed to open Galaxy Wearable app!',
+                                    ),
+                                  ),
+                                );
+                              }
+                            });
                           }
                         : null,
                     child: Text("2. Connect Galaxy Watch device"),
@@ -83,16 +89,24 @@ class Page4 extends PageViewModel {
                     ),
                     onPressed: currentStep == 2
                         ? () async {
-                            final status = await Permission.notification
-                                .request();
-
-                            if (status.isGranted) {
-                              // ignore: unused_result
-                              ref.refresh(currentStepProvider);
+                            try {
+                              launchUrl(
+                                Uri.parse(
+                                  "https://github.com/KN-Emognition/heartauth-wear-os",
+                                ),
+                              );
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to open app page!'),
+                                  ),
+                                );
+                              }
                             }
                           }
                         : null,
-                    child: Text("3. Grant notification access"),
+                    child: Text("3. Install companion app on watch"),
                   ),
                 ),
                 SizedBox(height: 5),
@@ -105,6 +119,29 @@ class Page4 extends PageViewModel {
                       ),
                     ),
                     onPressed: currentStep == 3
+                        ? () async {
+                            final status = await Permission.notification
+                                .request();
+
+                            if (status.isGranted) {
+                              // ignore: unused_result
+                              ref.refresh(currentStepProvider);
+                            }
+                          }
+                        : null,
+                    child: Text("4. Grant notification access"),
+                  ),
+                ),
+                SizedBox(height: 5),
+                SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: currentStep == 4
                         ? () {
                             SharedPreferences.getInstance().then((prefs) {
                               prefs.setBool('isFirstRun', false);
@@ -114,7 +151,7 @@ class Page4 extends PageViewModel {
                             ).pushReplacementNamed("/pairing");
                           }
                         : null,
-                    child: Text("4. Begin pairing"),
+                    child: Text("5. Begin pairing"),
                   ),
                 ),
               ],
