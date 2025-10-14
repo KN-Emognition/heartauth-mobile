@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/widgets/lottie_animation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/providers/login_challenge_provider.dart';
 import 'package:hauth_mobile/widgets/app_card.dart';
@@ -14,10 +15,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'HAuth Mobile',
-          style: TextStyle(color: theme.onSurface),
-        ),
+        title: Text('HAuth Mobile', style: TextStyle(color: theme.onSurface)),
         centerTitle: true,
         backgroundColor: theme.surfaceContainer,
       ),
@@ -35,8 +33,20 @@ class HomeScreen extends ConsumerWidget {
                 Navigator.of(context).pushNamed('/about');
               },
             ),
-          ]
-        )
+            DrawerItem(
+              icon: Icons.phonelink_setup,
+              title: 'Pair another account',
+              onTap: () {
+                Navigator.of(context).pushNamed('/pairing');
+              },
+            ),
+            DrawerItem(
+              icon: Icons.language,
+              title: 'Choose language',
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: challenge != null
@@ -46,7 +56,27 @@ class HomeScreen extends ConsumerWidget {
                 },
                 child: const Text('Authenticate'),
               )
-            : const Text('No pending login attempts'),
+            : Column(
+                spacing: 8,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LottieAnimation(
+                    'assets/animations/tumbleweed.json',
+                    height: 250,
+                    width: 250,
+                    loop: true,
+                    loopDelay: Duration(seconds: 2),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: const Text(
+                      'Whoops! There seem to be no pending login attempts.',
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

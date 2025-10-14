@@ -1,29 +1,37 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hauth_mobile/providers/wearos_provider.dart';
 import 'package:hauth_mobile/watch/contract.dart';
 import 'package:hauth_mobile/watch/trigger_and_wait.dart';
+import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 
-class WatchDebugApp extends StatelessWidget {
+class WatchDebugApp extends HookConsumerWidget {
   const WatchDebugApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Trigger Demo',
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
-      home: const TriggerPage(),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    return FutureProviderViewBuilder(provider: wearOSProvider, viewBuilder: (con, rf, wear) {
+      return MaterialApp(
+        title: 'Trigger Demo',
+        theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
+        home: TriggerPage(wear),
+      );
+    });
   }
 }
 
 class TriggerPage extends StatefulWidget {
-  const TriggerPage({
+  const TriggerPage(
+    this.wear, {
     super.key,
     this.ttlMs = 60000,
     this.measurementDurationMs = 10000,
   });
 
+  final FlutterWearOsConnectivity wear;
   final int ttlMs;
   final int measurementDurationMs;
 
@@ -53,14 +61,18 @@ class _TriggerPageState extends State<TriggerPage> {
 
     final nextGen = _generation + 1;
 
-    final expiresAtUtc = DateTime.now().toUtc().millisecondsSinceEpoch + widget.ttlMs;
+    final expiresAtUtc =
+        DateTime.now().toUtc().millisecondsSinceEpoch + widget.ttlMs;
 
     setState(() {
       _isWaiting = true;
       _lastError = null;
       _lastResponse = null;
 
-      _deadline = DateTime.fromMillisecondsSinceEpoch(expiresAtUtc, isUtc: true).toLocal();
+      _deadline = DateTime.fromMillisecondsSinceEpoch(
+        expiresAtUtc,
+        isUtc: true,
+      ).toLocal();
       _remainingMs = widget.ttlMs;
       _generation = nextGen;
     });
@@ -82,6 +94,7 @@ class _TriggerPageState extends State<TriggerPage> {
 
     try {
       final result = await triggerAndWait(
+        wear: widget.wear,
         expiresAt: expiresAtUtc,
         measurementDurationMs: widget.measurementDurationMs,
       );
@@ -106,7 +119,6 @@ class _TriggerPageState extends State<TriggerPage> {
       });
     }
   }
-
 
   void _retrigger() {
     _startTrigger(force: true);

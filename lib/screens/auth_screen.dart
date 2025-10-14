@@ -4,11 +4,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/utils/challenge_data.dart';
 import 'package:hauth_mobile/providers/login_challenge_provider.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
+import 'package:hauth_mobile/providers/wearos_provider.dart';
 import 'package:hauth_mobile/widgets/circular_countdown.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
+import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hauth_mobile/watch/trigger_and_wait.dart';
-
-import '../constant.dart';
+import 'package:hauth_mobile/constant.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -83,81 +84,87 @@ class AuthScreen extends ConsumerWidget {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final challengeCompleteRequest =
-                            await buildChallengeCompleteRequest(
-                              (await triggerAndWait(
-                                measurementDurationMs:
-                                    HEARTAUTH_MEASUREMENT_DURATION,
-                                expiresAt: challenge.expiresAt * 1000,
-                              )).data,
-                              challenge.ephemeralPublicKeyPem,
-                              challenge.nonce,
-                            );
+                    child: FutureProviderViewBuilder(
+                      provider: wearOSProvider,
+                      viewBuilder: (con, rf, wear) {
+                        return ElevatedButton(
+                          onPressed: () async {
+                            final challengeCompleteRequest =
+                                await buildChallengeCompleteRequest(
+                                  (await triggerAndWait(
+                                    wear: wear,
+                                    measurementDurationMs:
+                                        HEARTAUTH_MEASUREMENT_DURATION,
+                                    expiresAt: challenge.expiresAt * 1000,
+                                  )).data,
+                                  challenge.ephemeralPublicKeyPem,
+                                  challenge.nonce,
+                                );
 
-                        Response<void>? response;
-                        try {
-                          response = await api.run(
-                            (client) =>
-                                client.getChallengeApi().completeChallenge(
-                                  id: challenge.challengeId,
-                                  completeChallengeRequest:
-                                      challengeCompleteRequest,
+                            Response<void>? response;
+                            try {
+                              response = await api.run(
+                                (client) =>
+                                    client.getChallengeApi().completeChallenge(
+                                      id: challenge.challengeId,
+                                      completeChallengeRequest:
+                                          challengeCompleteRequest,
+                                    ),
+                              );
+                            } on DioException catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Failed to complete challenge: ${e.response?.data['error'] ?? e.message}',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                            }
+
+                            if (response == null) {
+                              return;
+                            }
+
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Challenge completed successfully!',
+                                  ),
                                 ),
-                          );
-                        } on DioException catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Failed to complete challenge: ${e.response?.data['error'] ?? e.message}',
-                                ),
-                              ),
-                            );
-                            return;
-                          }
-                        }
-
-                        if (response == null) {
-                          return;
-                        }
-
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Challenge completed successfully!',
-                              ),
-                            ),
-                          );
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (dialogContext) {
-                              return SuccessAnimationOverlay(
-                                onCompleted: () {
-                                  skipExpiredSnackBar = true;
-                                  ref
-                                      .read(loginChallengeProvider.notifier)
-                                      .clearChallenge();
-                                  Navigator.of(dialogContext).pop();
+                              );
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (dialogContext) {
+                                  return SuccessAnimationOverlay(
+                                    onCompleted: () {
+                                      skipExpiredSnackBar = true;
+                                      ref
+                                          .read(loginChallengeProvider.notifier)
+                                          .clearChallenge();
+                                      Navigator.of(dialogContext).pop();
+                                    },
+                                  );
                                 },
                               );
-                            },
-                          );
-                        }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.primary,
+                            foregroundColor: theme.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            textStyle: const TextStyle(fontSize: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text("Start measuring ECG"),
+                        );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.primary,
-                        foregroundColor: theme.onPrimary,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        textStyle: const TextStyle(fontSize: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text("Start measuring ECG"),
                     ),
                   ),
                 ],
