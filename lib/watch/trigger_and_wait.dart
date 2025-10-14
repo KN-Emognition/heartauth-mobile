@@ -16,13 +16,9 @@ Future<void> _saveBodyToFile(String id, String body) async {
 }
 
 final _uuid = const Uuid();
-final _wear = FlutterWearOsConnectivity();
-
-Future<void> initWearLayer() async {
-  await _wear.configureWearableAPI();
-}
 
 Future<TriggerResponse> triggerAndWait({
+  required FlutterWearOsConnectivity wear,
   required EpochMillis expiresAt,
   required int measurementDurationMs,
   Map<String, dynamic> params = const {},
@@ -37,53 +33,65 @@ Future<TriggerResponse> triggerAndWait({
     expiresAt,
     isUtc: true,
   ).toIso8601String();
-  print(
-    '[triggerAndWait] sending -> $triggerPath : ${{...req.toJson(), 'expiresAt(iso)': isoExpiry}}',
-  );
+  if (kDebugMode) {
+    print(
+      '[triggerAndWait] sending -> $triggerPath : ${{...req.toJson(), 'expiresAt(iso)': isoExpiry}}',
+    );
+  }
 
   final resultUri = Uri(scheme: 'wear', host: '*', path: resultPath);
   final completer = Completer<TriggerResponse>();
 
   late final StreamSubscription sub;
-  sub = _wear.messageReceived(pathURI: resultUri).listen((msg) async {
+  sub = wear.messageReceived(pathURI: resultUri).listen((msg) async {
     try {
       final raw = utf8.decode(msg.data);
       final map = jsonDecode(raw) as Map<String, dynamic>;
-      if(kDebugMode) {
+      if (kDebugMode) {
         await _saveBodyToFile(req.id, map.toString());
       }
       if (map['type'] == typeResult && map['id'] == req.id) {
         final resp = TriggerResponse.fromJson(map);
         if (!completer.isCompleted) completer.complete(resp);
       } else {
-        print(
-          '[triggerAndWait] non-matching message ignored (id=${map['id']}, type=${map['type']})',
-        );
+        if (kDebugMode) {
+          print(
+            '[triggerAndWait] non-matching message ignored (id=${map['id']}, type=${map['type']})',
+          );
+        }
       }
     } catch (e, st) {
-      print('[triggerAndWait] parse error: $e\n$st');
+      if (kDebugMode) {
+        print('[triggerAndWait] parse error: $e\n$st');
+      }
     }
   });
 
   final payload = Uint8List.fromList(utf8.encode(jsonEncode(req.toJson())));
 
-  final devices = await _wear.getConnectedDevices();
+  final devices = await wear.getConnectedDevices();
   if (devices.isEmpty) {
-    print('[triggerAndWait] no connected Wear OS devices found');
+    if (kDebugMode) {
+      print('[triggerAndWait] no connected Wear OS devices found');
+    }
   }
   for (final d in devices) {
     try {
-      final requestId = await _wear.sendMessage(
+      final requestId = await wear.sendMessage(
         payload,
         deviceId: d.id,
         path: triggerPath,
         priority: MessagePriority.high,
       );
-      print(
-        '[triggerAndWait] tx -> ${d.id} $triggerPath (requestId=$requestId)',
-      );
+      if (kDebugMode) {
+        print(
+          '[triggerAndWait] tx -> ${d.id} $triggerPath (requestId=$requestId)',
+        );
+      }
     } catch (e) {
-      print('[triggerAndWait] send failed to ${d.id}: $e');
+      if (kDebugMode) {
+        print('[triggerAndWait] send failed to ${d.id}: $e');
+      }
     }
   }
 
@@ -94,12 +102,16 @@ Future<TriggerResponse> triggerAndWait({
       .timeout(
         Duration(milliseconds: remainingMs),
         onTimeout: () {
-          print('[triggerAndWait] TIMEOUT at $isoExpiry for id=${req.id}');
+          if (kDebugMode) {
+            print('[triggerAndWait] TIMEOUT at $isoExpiry for id=${req.id}');
+          }
           return TriggerResponse(id: req.id, ok: false);
         },
       )
       .whenComplete(() async {
-        print('[triggerAndWait] cleanup listener for id=${req.id}');
+        if (kDebugMode) {
+          print('[triggerAndWait] cleanup listener for id=${req.id}');
+        }
         await sub.cancel();
       });
 }

@@ -33,6 +33,18 @@ class HomeScreen extends ConsumerWidget {
                 Navigator.of(context).pushNamed('/about');
               },
             ),
+            DrawerItem(
+              icon: Icons.phonelink_setup,
+              title: 'Pair another account',
+              onTap: () {
+                Navigator.of(context).pushNamed('/pairing');
+              },
+            ),
+            DrawerItem(
+              icon: Icons.language,
+              title: 'Choose language',
+              onTap: () {},
+            ),
           ],
         ),
       ),

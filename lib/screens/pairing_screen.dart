@@ -1,16 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'package:hauth_api_external/hauth_api_external.dart';
+import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
+import 'package:hauth_mobile/providers/wearos_provider.dart';
 import 'package:hauth_mobile/utils/pairing_data.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
 import 'package:hauth_mobile/watch/trigger_and_wait.dart';
-
-import '../constant.dart';
+import 'package:hauth_mobile/constant.dart';
 
 class PairingScreen extends HookConsumerWidget {
   PairingScreen({super.key});
@@ -19,6 +21,7 @@ class PairingScreen extends HookConsumerWidget {
     QRViewController controller,
     Barcode code,
     BuildContext context,
+    FlutterWearOsConnectivity wear,
     ApiWrapper api,
   ) async {
     await controller.pauseCamera();
@@ -152,6 +155,7 @@ class PairingScreen extends HookConsumerWidget {
     final confirmPairingData = await buildConfirmPairingRequest(
       initResult.data!,
       (await triggerAndWait(
+        wear: wear,
         measurementDurationMs: HEARTAUTH_MEASUREMENT_DURATION,
         expiresAt: initResult.data!.expiresAt * 1000,
       )).data,
@@ -201,7 +205,9 @@ class PairingScreen extends HookConsumerWidget {
             onCompleted: () async {
               await controller.stopCamera();
               if (context.mounted) {
-                Navigator.of(dialogContext).pop();
+                while (Navigator.of(dialogContext).canPop()) {
+                  Navigator.of(dialogContext).pop();
+                }
                 Navigator.of(dialogContext).pushReplacementNamed('/home');
               }
             },
@@ -217,21 +223,27 @@ class PairingScreen extends HookConsumerWidget {
 
     final double scanSize = MediaQuery.of(context).size.width * 0.8;
 
-    final scanner = QRView(
-      key: GlobalKey(debugLabel: 'QR'),
-      onQRViewCreated: (QRViewController controller) {
-        controller.scannedDataStream.listen((scanData) {
-          if (context.mounted) {
-            onDetect(controller, scanData, context, api);
-          }
-        });
+    final scanner = FutureProviderViewBuilder(
+      provider: wearOSProvider,
+      viewBuilder: (context, ref, wear) {
+        return QRView(
+          key: GlobalKey(debugLabel: 'QR'),
+          onQRViewCreated: (QRViewController controller) {
+            controller.scannedDataStream.listen((scanData) {
+              if (context.mounted) {
+                onDetect(controller, scanData, context, wear, api);
+              }
+            });
+          },
+          overlay: QrScannerOverlayShape(
+            borderColor: Colors.white,
+            overlayColor: Colors.black.withValues(alpha: 0.5),
+            borderRadius: 10,
+            cutOutSize: scanSize,
+          ),
+        );
       },
-      overlay: QrScannerOverlayShape(
-        borderColor: Colors.white,
-        overlayColor: Colors.black.withValues(alpha: 0.5),
-        borderRadius: 10,
-        cutOutSize: scanSize,
-      ),
+      bgColor: Colors.black,
     );
 
     return Scaffold(
