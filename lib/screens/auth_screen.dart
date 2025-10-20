@@ -112,11 +112,13 @@ class AuthScreen extends ConsumerWidget {
                                     ),
                               );
                             } on DioException catch (e) {
+                              await ref.read(loginChallengeProvider.notifier).clearChallenge();
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Failed to complete challenge: ${e.response?.data['error'] ?? e.message}',
+                                      // 'Failed to complete challenge: ${e.response?.data['error'] ?? e.message}',
+                                      'Failed to complete challenge',
                                     ),
                                   ),
                                 );
