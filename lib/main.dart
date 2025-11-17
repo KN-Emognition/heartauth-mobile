@@ -17,6 +17,7 @@ import 'package:hauth_mobile/screens/auth_screen.dart';
 import 'package:hauth_mobile/screens/pairing_screen.dart';
 import 'package:hauth_mobile/screens/about_screen.dart';
 import 'package:hauth_mobile/screens/error_screen.dart';
+import 'package:hauth_mobile/screens/license_screen.dart';
 import 'package:hauth_mobile/screens/watch_debug_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -149,6 +150,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         '/auth': (context) => const AuthScreen(),
         '/pairing': (context) => PairingScreen(),
         '/about': (context) => const AboutScreen(),
+        '/license': (context) => const LicenseScreen(),
         '/error': (context) => const ErrorScreen(),
       },
       home: serverHealth == ServerHealthStatus.unhealthy

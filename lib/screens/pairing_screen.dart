@@ -172,11 +172,9 @@ class PairingScreen extends HookConsumerWidget {
         true,
       );
     } on DioException catch (e) {
-      if (kDebugMode) {
-        print(
-          'Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',
-        );
-      }
+
+      print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',);
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

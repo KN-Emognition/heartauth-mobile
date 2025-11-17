@@ -82,6 +82,12 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/license");
+                },
+                child: const Text('Open source licenses'),
+              ),
             ],
           ),
         ),
