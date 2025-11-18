@@ -39,7 +39,7 @@ class FutureProviderViewBuilder<T> extends HookConsumerWidget {
               child: Scaffold(
                 backgroundColor: bgColor,
                 body: Center(
-                  child: Text(S.of(context).watchdebugscreen_error(error)),
+                  child: Text(S.of(context).future_provider_error(error)),
                 ),
               ),
             );
