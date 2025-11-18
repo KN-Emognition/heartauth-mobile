@@ -37,9 +37,10 @@ Future<TriggerResponse> triggerAndWait({
   required EpochMillis expiresAt,
   required int measurementDurationMs,
   Map<String, dynamic> params = const {},
-  String? username
+  bool saveFile = false,
+  String? username,
 }) async {
-  if(kDebugMode) {
+  if(saveFile) {
     if (username == null) {
       throw Exception(
         'Username must be provided in debug mode for logging purposes',
@@ -71,7 +72,7 @@ Future<TriggerResponse> triggerAndWait({
     try {
       final raw = utf8.decode(msg.data);
       final map = jsonDecode(raw) as Map<String, dynamic>;
-      if (kDebugMode) {
+      if (kDebugMode && saveFile) {
         await _saveBodyToFile(req.id, username!, raw);
       }
       if (map['type'] == typeResult && map['id'] == req.id) {

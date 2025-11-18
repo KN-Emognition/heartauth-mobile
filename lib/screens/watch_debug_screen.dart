@@ -119,6 +119,7 @@ class _TriggerPageState extends State<TriggerPage> {
         expiresAt: expiresAtUtc,
         measurementDurationMs: measurementMs,
         // pass username as a named parameter so backend can prefix saved filename
+        saveFile: true,
         username: username,
       );
 
