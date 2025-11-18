@@ -36,8 +36,8 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebaseMessaging(navigatorKey, container, prefs);
-  //runApp(UncontrolledProviderScope(container: container, child: MyApp()));
-  runApp(ProviderScope(child: WatchDebugApp()));
+  runApp(UncontrolledProviderScope(container: container, child: MyApp()));
+  //runApp(ProviderScope(child: WatchDebugApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
