@@ -18,17 +18,19 @@ class LanguageSettingsDialog extends HookConsumerWidget {
     final systemLocale = ui.PlatformDispatcher.instance.locale;
 
     // Check if the system locale is supported
-    final matchesSupported = supportedLocales
-        .any((loc) => loc.languageCode == systemLocale.languageCode);
+    final matchesSupported = supportedLocales.any(
+      (loc) => loc.languageCode == systemLocale.languageCode,
+    );
 
     // If supported, get that locale
     final matchingLocale = matchesSupported
         ? supportedLocales.firstWhere(
-            (loc) => loc.languageCode == systemLocale.languageCode)
+            (loc) => loc.languageCode == systemLocale.languageCode,
+          )
         : null;
 
     return AlertDialog(
-      title: const Text("Select Language"),
+      title: Text(S.of(context).languagedialog_title),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -40,17 +42,17 @@ class LanguageSettingsDialog extends HookConsumerWidget {
 
               final isSystemDefaultLocale =
                   matchesSupported &&
-                      matchingLocale!.languageCode == locale.languageCode;
+                  matchingLocale!.languageCode == locale.languageCode;
 
               return ListTile(
                 title: Row(
                   children: [
                     Text(locale.languageCode.toUpperCase()),
                     if (isSystemDefaultLocale)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(left: 6),
                         child: Text(
-                          "(System default)",
+                          S.of(context).languagedialog_default,
                           style: TextStyle(
                             fontSize: 12,
                             fontStyle: FontStyle.italic,
@@ -72,4 +74,3 @@ class LanguageSettingsDialog extends HookConsumerWidget {
     );
   }
 }
-

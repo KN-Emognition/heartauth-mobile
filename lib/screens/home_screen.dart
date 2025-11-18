@@ -77,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
-                      S.of(context).no_login_attempts,
+                      S.of(context).homescreen_no_login_attempts,
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),

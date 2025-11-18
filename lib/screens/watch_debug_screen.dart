@@ -6,20 +6,23 @@ import 'package:hauth_mobile/providers/wearos_provider.dart';
 import 'package:hauth_mobile/watch/contract.dart';
 import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class WatchDebugApp extends HookConsumerWidget {
   const WatchDebugApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    return FutureProviderViewBuilder(provider: wearOSProvider, viewBuilder: (con, rf, wear) {
-      return MaterialApp(
-        title: 'Trigger Demo',
-        theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
-        home: TriggerPage(wear),
-      );
-    });
+    return FutureProviderViewBuilder(
+      provider: wearOSProvider,
+      viewBuilder: (con, rf, wear) {
+        return MaterialApp(
+          title: 'Trigger Demo',
+          theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
+          home: TriggerPage(wear),
+        );
+      },
+    );
   }
 }
 
@@ -138,8 +141,8 @@ class _TriggerPageState extends State<TriggerPage> {
   @override
   Widget build(BuildContext context) {
     final waitingText = _isWaiting
-        ? 'Waiting for response…'
-        : 'Idle. Press the button to send a trigger.';
+        ? S.of(context).watchdebugscreen_waiting
+        : S.of(context).watchdebugscreen_idle;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Trigger & Wait Demo')),
@@ -161,7 +164,11 @@ class _TriggerPageState extends State<TriggerPage> {
                           Text(waitingText),
                           const SizedBox(height: 6),
                           Text(
-                            'Time left: ${_formatMs(_remainingMs)}',
+                            S
+                                .of(context)
+                                .watchdebugscreen_time_left(
+                                  _formatMs(_remainingMs),
+                                ),
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
@@ -177,13 +184,13 @@ class _TriggerPageState extends State<TriggerPage> {
             if (!_isWaiting)
               FilledButton.icon(
                 icon: const Icon(Icons.flash_on),
-                label: const Text('Send Trigger'),
+                label: Text(S.of(context).watchdebugscreen_trigger),
                 onPressed: () => _startTrigger(),
               )
             else
               FilledButton.icon(
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retrigger'),
+                label: Text(S.of(context).watchdebugscreen_retrigger),
                 onPressed: _retrigger,
               ),
 
@@ -197,13 +204,20 @@ class _TriggerPageState extends State<TriggerPage> {
                     alignment: Alignment.centerLeft,
                     child: _lastError != null
                         ? Text(
-                            'Error: $_lastError',
+                            S
+                                .of(context)
+                                .watchdebugscreen_error(_lastError ?? ''),
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.error,
                             ),
                           )
                         : Text(
-                            'Last response: ok=${_lastResponse!.ok} id=${_lastResponse!.id}',
+                            S
+                                .of(context)
+                                .watchdebugscreen_last_response(
+                                  _lastResponse!.ok,
+                                  _lastResponse!.id,
+                                ),
                           ),
                   ),
                 ),

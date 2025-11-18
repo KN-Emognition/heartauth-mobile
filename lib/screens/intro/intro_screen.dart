@@ -21,7 +21,7 @@ class IntroScreen extends ConsumerWidget {
     return IntroductionScreen(
       pages: introPages,
       showDoneButton: true,
-      overrideDone: (con, fun) => TextButton(child: Icon(Icons.arrow_forward, color: Colors.white), onPressed: null), // fake invisible button to prevent intro screen footer from chaning size when 'next' button disappears
+      overrideDone: (con, fun) => TextButton(onPressed: null, child: Icon(Icons.arrow_forward, color: Colors.white)), // fake invisible button to prevent intro screen footer from changing size when 'next' button disappears
       showSkipButton: false,
       dotsContainerDecorator: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,

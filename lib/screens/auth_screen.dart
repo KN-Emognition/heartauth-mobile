@@ -10,6 +10,7 @@ import 'package:hauth_mobile/widgets/success_overlay.dart';
 import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/constant.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -26,7 +27,7 @@ class AuthScreen extends ConsumerWidget {
         // Challenge expired, show a message and go back
         if (!skipExpiredSnackBar) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Challenge has expired!')),
+            SnackBar(content: Text(S.of(context).authscreen_challenge_expired)),
           );
         }
         Navigator.of(context).pop();
@@ -37,13 +38,13 @@ class AuthScreen extends ConsumerWidget {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Authentication Challenge',
+            S.of(context).authscreen_auth_challenge,
             style: TextStyle(color: theme.onPrimaryContainer),
           ),
           centerTitle: true,
           backgroundColor: theme.primaryContainer,
         ),
-        body: const Center(child: Text('No active challenge')),
+        body: Center(child: Text(S.of(context).authscreen_no_challenge)),
       );
     }
 
@@ -53,7 +54,7 @@ class AuthScreen extends ConsumerWidget {
     return Stack(
       children: [
         Scaffold(
-          appBar: AppBar(title: const Text('Authentication Challenge')),
+          appBar: AppBar(title: Text(S.of(context).authscreen_auth_challenge)),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
@@ -63,8 +64,8 @@ class AuthScreen extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text(
-                        "There's a new login attempt",
+                      Text(
+                        S.of(context).authscreen_login_attempt,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20,
@@ -73,7 +74,9 @@ class AuthScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        "Challenge ID: ${challenge.challengeId}",
+                        S
+                            .of(context)
+                            .authscreen_challenge_id(challenge.challengeId),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
@@ -112,13 +115,15 @@ class AuthScreen extends ConsumerWidget {
                                     ),
                               );
                             } on DioException catch (e) {
-                              await ref.read(loginChallengeProvider.notifier).clearChallenge();
+                              await ref
+                                  .read(loginChallengeProvider.notifier)
+                                  .clearChallenge();
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
                                       // 'Failed to complete challenge: ${e.response?.data['error'] ?? e.message}',
-                                      'Failed to complete challenge',
+                                      S.of(context).authscreen_challenge_fail,
                                     ),
                                   ),
                                 );
@@ -134,7 +139,7 @@ class AuthScreen extends ConsumerWidget {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Challenge completed successfully!',
+                                    S.of(context).authscreen_challenge_success,
                                   ),
                                 ),
                               );
@@ -164,7 +169,7 @@ class AuthScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text("Start measuring ECG"),
+                          child: Text(S.of(context).authscreen_button_text),
                         );
                       },
                     ),
