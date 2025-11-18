@@ -3,15 +3,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'package:hauth_api_external/hauth_api_external.dart';
-import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/providers/wearos_provider.dart';
 import 'package:hauth_mobile/utils/pairing_data.dart';
+import 'package:hauth_mobile/utils/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
-import 'package:hauth_mobile/watch/trigger_and_wait.dart';
+import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hauth_mobile/constant.dart';
 import 'package:hauth_mobile/generated/l10n.dart';
 

@@ -46,5 +46,6 @@
   "watchdebugscreen_last_response": "Last response: ok={ok} id={id}",
   "appcard_title": "Secure your digital life",
   "languagedialog_title": "Select Language",
-  "languagedialog_default": "(Default)"
+  "languagedialog_default": "(Default)",
+  "server_unreachable_error": "There was an error while trying to reach our servers. Please try again later."
 }

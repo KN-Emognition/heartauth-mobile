@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:hauth_mobile/watch/contract.dart';
+import 'package:hauth_mobile/utils/watch/contract.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';

@@ -46,5 +46,6 @@
   "watchdebugscreen_last_response": "Ostatnia odpowiedź: ok={ok} id={id}",
   "appcard_title": "Zabezpiecz swoje cyfrowe życie",
   "languagedialog_title": "Wybierz język",
-  "languagedialog_default": "(Domyślny)"
+  "languagedialog_default": "(Domyślny)",
+  "server_unreachable_error": "Wystąpił błąd podczas próby połączenia się z naszymi serwerami. Spróbuj ponownie później."
 }

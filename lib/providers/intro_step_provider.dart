@@ -5,7 +5,7 @@ import 'package:flutter_wear_os_connectivity/helpers/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:hauth_mobile/providers/wearos_provider.dart';
-import 'package:hauth_mobile/watch/contract.dart';
+import 'package:hauth_mobile/utils/watch/contract.dart';
 
 final currentStepProvider = FutureProvider<int>((ref) async {
   final cameraGranted = await Permission.camera.isGranted;
