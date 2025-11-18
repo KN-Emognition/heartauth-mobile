@@ -2,13 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/utils/challenge_data.dart';
+import 'package:hauth_mobile/utils/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/providers/login_challenge_provider.dart';
 import 'package:hauth_mobile/providers/api_client_provider.dart';
 import 'package:hauth_mobile/providers/wearos_provider.dart';
 import 'package:hauth_mobile/widgets/circular_countdown.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
 import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
-import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/constant.dart';
 import 'package:hauth_mobile/generated/l10n.dart';
 

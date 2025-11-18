@@ -36,7 +36,6 @@
   "pairingscreen_generic_error": "Unknown error",
   "pairingscreen_fail": "Pairing failed: {error}",
   "pairingscreen_qr_prompt": "Please align the pairing code within the frame",
-  "unsupportedscreen_unsupported_device": "This device is not supported.",
   "watchdebugscreen_waiting": "Waiting for response…",
   "watchdebugscreen_idle": "Idle. Press the button to send a trigger.",
   "watchdebugscreen_time_left": "Time left: {timeLeft}",
@@ -46,5 +45,7 @@
   "watchdebugscreen_last_response": "Last response: ok={ok} id={id}",
   "appcard_title": "Secure your digital life",
   "languagedialog_title": "Select Language",
-  "languagedialog_default": "(Default)"
+  "languagedialog_default": "(Default)",
+  "server_unreachable_error": "There was an error while trying to reach our servers. Please try again later.",
+  "unsupported_device": "This ({brand}) device is not supported."
 }

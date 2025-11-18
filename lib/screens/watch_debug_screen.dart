@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/providers/wearos_provider.dart';
-import 'package:hauth_mobile/watch/contract.dart';
-import 'package:hauth_mobile/watch/trigger_and_wait.dart';
+import 'package:hauth_mobile/utils/watch/contract.dart';
+import 'package:hauth_mobile/utils/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hauth_mobile/generated/l10n.dart';
 

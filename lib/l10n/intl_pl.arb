@@ -36,7 +36,6 @@
   "pairingscreen_generic_error": "Nieznany błąd",
   "pairingscreen_fail": "Parowanie nieudane: {error}",
   "pairingscreen_qr_prompt": "Proszę ustawić kod parowania w ramce",
-  "unsupportedscreen_unsupported_device": "Twoje urządzenie nie jest obsługiwane.",
   "watchdebugscreen_waiting": "Oczekiwanie na odpowiedź…",
   "watchdebugscreen_idle": "Brak operacji. Naciśnij przycisk, aby rozpocząć pomiar.",
   "watchdebugscreen_time_left": "Pozostały czas: {timeLeft}",
@@ -46,5 +45,7 @@
   "watchdebugscreen_last_response": "Ostatnia odpowiedź: ok={ok} id={id}",
   "appcard_title": "Zabezpiecz swoje cyfrowe życie",
   "languagedialog_title": "Wybierz język",
-  "languagedialog_default": "(Domyślny)"
+  "languagedialog_default": "(Domyślny)",
+  "server_unreachable_error": "Wystąpił błąd podczas próby połączenia się z naszymi serwerami. Spróbuj ponownie później.",
+  "unsupported_device": "Twoje urządzenie ({brand}) nie jest obsługiwane."
 }
