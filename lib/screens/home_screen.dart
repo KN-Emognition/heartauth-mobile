@@ -30,21 +30,21 @@ class HomeScreen extends ConsumerWidget {
             AppCard(),
             DrawerItem(
               icon: Icons.info,
-              title: 'About',
+              title: S.of(context).homescreen_drawer_about,
               onTap: () {
                 Navigator.of(context).pushNamed('/about');
               },
             ),
             DrawerItem(
               icon: Icons.phonelink_setup,
-              title: 'Pair another account',
+              title: S.of(context).homescreen_drawer_pair,
               onTap: () {
                 Navigator.of(context).pushNamed('/pairing');
               },
             ),
             DrawerItem(
               icon: Icons.language,
-              title: 'Choose language',
+              title: S.of(context).homescreen_drawer_language,
               onTap: () {
                 showDialog(
                   context: context,
