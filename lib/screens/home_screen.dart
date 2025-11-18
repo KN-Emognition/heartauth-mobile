@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hauth_mobile/widgets/lottie_animation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 import 'package:hauth_mobile/providers/login_challenge_provider.dart';
 import 'package:hauth_mobile/widgets/app_card.dart';
 import 'package:hauth_mobile/widgets/drawer_item.dart';
+import 'package:hauth_mobile/widgets/language_settings_dialog.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -43,7 +45,12 @@ class HomeScreen extends ConsumerWidget {
             DrawerItem(
               icon: Icons.language,
               title: 'Choose language',
-              onTap: () {},
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => const LanguageSettingsDialog(),
+                );
+              },
             ),
           ],
         ),
@@ -69,8 +76,8 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: const Text(
-                      'Whoops! There seem to be no pending login attempts.',
+                    child: Text(
+                      S.of(context).no_login_attempts,
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
