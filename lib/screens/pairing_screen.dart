@@ -13,6 +13,7 @@ import 'package:hauth_mobile/utils/pairing_data.dart';
 import 'package:hauth_mobile/widgets/success_overlay.dart';
 import 'package:hauth_mobile/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/constant.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class PairingScreen extends HookConsumerWidget {
   PairingScreen({super.key});
@@ -47,7 +48,7 @@ class PairingScreen extends HookConsumerWidget {
     // Load the default display name from preferences
     final preferences = await SharedPreferences.getInstance();
     final defaultDisplayName =
-        preferences.getString('displayName') ?? 'My Device';
+        preferences.getString('displayName') ?? (context.mounted ? S.of(context).pairingscreen_generic_device_name : 'My Device');
     final displayNameController = TextEditingController(
       text: defaultDisplayName,
     );
@@ -61,22 +62,22 @@ class PairingScreen extends HookConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Are you sure you want to register this device?'),
+        title: Text(S.of(context).pairingscreen_pairing_confirmation),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Device display name:'),
+            Text(S.of(context).pairingscreen_device_display_name),
             TextField(controller: displayNameController),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(S.of(context).pairingscreen_cancel_button),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Register'),
+            child: Text(S.of(context).pairingscreen_register_button),
           ),
         ],
       ),
@@ -111,7 +112,7 @@ class PairingScreen extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+              S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
             ),
           ),
         );
@@ -140,7 +141,7 @@ class PairingScreen extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+                S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
             ),
           ),
         );
@@ -173,13 +174,15 @@ class PairingScreen extends HookConsumerWidget {
       );
     } on DioException catch (e) {
 
-      print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',);
+      if (kDebugMode) {
+        print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',);
+      }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Pairing failed: ${e.response?.data['error'] ?? 'Unknown error'}',
+              S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error),
             ),
           ),
         );
@@ -263,7 +266,7 @@ class PairingScreen extends HookConsumerWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: Text(
-                    'Please align the pairing code within the frame',
+                    S.of(context).pairingscreen_qr_prompt,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 11,

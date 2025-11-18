@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class AppCard extends StatelessWidget {
   const AppCard({super.key});
@@ -23,7 +24,7 @@ class AppCard extends StatelessWidget {
                   'assets/hauth_logo.svg',
                   width: 250,
                   height: 250,
-                  semanticsLabel: 'HAuth Logo',
+                  semanticsLabel: S.of(context).intropage1_semantics,
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -36,8 +37,11 @@ class AppCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Secure your digital life',
-                  style: TextStyle(color: theme.onPrimaryContainer, fontSize: 14),
+                  S.of(context).appcard_title,
+                  style: TextStyle(
+                    color: theme.onPrimaryContainer,
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
