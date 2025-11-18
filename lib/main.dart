@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/utils/device_unsupported_exception.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -81,18 +82,25 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     final api = ref.read(apiClientProvider);
 
     try {
-      final info = await api.run((client) => client.getHealthApi().getHealth());
-      if (info.statusCode == 200) {
-        if (firstRun) {
-          return const IntroScreen();
-        } else if (!paired) {
-          return PairingScreen();
-        } else {
-          return const HomeScreen();
-        }
-      } else {
-        return PairingScreen();
+      await api.run((client) => client.getHealthApi().getHealth());
+
+      final brand = prefs.getString('brand');
+      final manufacturer = prefs.getString('manufacturer');
+
+      if(brand != "samsung") {
+        throw DeviceUnsupportedException(S.current.unsupported_device(brand ?? ''));
+      } else if(manufacturer != "samsung"){
+        throw Exception(S.current.unsupported_device(manufacturer ?? ''));
       }
+
+      if (firstRun) {
+        return const IntroScreen();
+      } else if (!paired) {
+        return PairingScreen();
+      } else {
+        return const HomeScreen();
+      }
+
     } on Exception catch (e) {
       return ErrorScreen(errorText: e.toString());
     }
