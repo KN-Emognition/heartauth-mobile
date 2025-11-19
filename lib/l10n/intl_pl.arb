@@ -49,9 +49,9 @@
   "future_provider_error": "Error: {error}",
   "languagedialog_title": "Wybierz język",
   "languagedialog_default": "(Domyślny)",
-  "stats_paired": "Połącznone konta: {count}",
-  "stats_challenges": "Przychodzące wyzwania: {count}",
-  "stats_successful": "Udane logowania: {count}",
+  "stats_paired": "Połącznone konta",
+  "stats_challenges": "Przychodzące wyzwania",
+  "stats_successful": "Udane logowania",
   "server_unreachable_error": "Wystąpił błąd podczas próby połączenia się z naszymi serwerami. Spróbuj ponownie później.",
   "unsupported_device": "Twoje urządzenie ({brand}) nie jest obsługiwane."
 }

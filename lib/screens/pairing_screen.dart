@@ -26,6 +26,7 @@ class PairingScreen extends HookConsumerWidget {
     FlutterWearOsConnectivity wear,
     ApiWrapper api,
     StatsNotifier stats,
+    ColorScheme theme,
   ) async {
     await controller.pauseCamera();
 
@@ -50,7 +51,10 @@ class PairingScreen extends HookConsumerWidget {
     // Load the default display name from preferences
     final preferences = await SharedPreferences.getInstance();
     final defaultDisplayName =
-        preferences.getString('displayName') ?? (context.mounted ? S.of(context).pairingscreen_generic_device_name : 'My Device');
+        preferences.getString('displayName') ??
+        (context.mounted
+            ? S.of(context).pairingscreen_generic_device_name
+            : 'My Device');
     final displayNameController = TextEditingController(
       text: defaultDisplayName,
     );
@@ -114,9 +118,14 @@ class PairingScreen extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
+              S
+                  .of(context)
+                  .pairingscreen_fail(
+                    e.response?.data['error'] ??
+                        S.of(context).pairingscreen_generic_error,
+                  ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: theme.error,
           ),
         );
       }
@@ -144,9 +153,14 @@ class PairingScreen extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
+              S
+                  .of(context)
+                  .pairingscreen_fail(
+                    e.response?.data['error'] ??
+                        S.of(context).pairingscreen_generic_error,
+                  ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: theme.error,
           ),
         );
       }
@@ -177,18 +191,24 @@ class PairingScreen extends HookConsumerWidget {
         true,
       );
     } on DioException catch (e) {
-
       if (kDebugMode) {
-        print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',);
+        print(
+          'Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',
+        );
       }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error),
+              S
+                  .of(context)
+                  .pairingscreen_fail(
+                    e.response?.data['error'] ??
+                        S.of(context).pairingscreen_generic_error,
+                  ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: theme.error,
           ),
         );
       }
@@ -228,6 +248,7 @@ class PairingScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final api = ref.read(apiClientProvider);
     final stats = ref.read(statsProvider.notifier);
+    final theme = Theme.of(context).colorScheme;
 
     final double scanSize = MediaQuery.of(context).size.width * 0.8;
 
@@ -239,7 +260,15 @@ class PairingScreen extends HookConsumerWidget {
           onQRViewCreated: (QRViewController controller) {
             controller.scannedDataStream.listen((scanData) {
               if (context.mounted) {
-                onDetect(controller, scanData, context, wear, api, stats);
+                onDetect(
+                  controller,
+                  scanData,
+                  context,
+                  wear,
+                  api,
+                  stats,
+                  theme,
+                );
               }
             });
           },
