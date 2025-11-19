@@ -97,7 +97,11 @@ class HomeScreen extends ConsumerWidget {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+                    padding: const EdgeInsets.only(
+                      top: 12.0,
+                      left: 12.0,
+                      right: 12.0,
+                    ),
                     child: StatsSummary(),
                   ),
                 ),
@@ -174,14 +178,22 @@ class HomeScreen extends ConsumerWidget {
                         viewBuilder: (con, rf, wear) {
                           return ElevatedButton(
                             onPressed: () async {
+
+                              final triggerResponse = await triggerAndWait(
+                                wear: wear,
+                                measurementDurationMs:
+                                    HEARTAUTH_MEASUREMENT_DURATION,
+                                expiresAt: challenge.expiresAt * 1000,
+                                context: context
+                              );
+
+                              if (triggerResponse == null) {
+                                return;
+                              }
+
                               final challengeCompleteRequest =
                                   await buildChallengeCompleteRequest(
-                                    (await triggerAndWait(
-                                      wear: wear,
-                                      measurementDurationMs:
-                                          HEARTAUTH_MEASUREMENT_DURATION,
-                                      expiresAt: challenge.expiresAt * 1000,
-                                    )).data,
+                                    triggerResponse.data,
                                     challenge.ephemeralPublicKeyPem,
                                     challenge.nonce,
                                   );
