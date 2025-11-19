@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/providers/stats_provider.dart';
+import 'package:hauth_mobile/widgets/stats_summary.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/utils/challenge_data.dart';
 import 'package:hauth_mobile/utils/watch/trigger_and_wait.dart';
@@ -29,6 +31,7 @@ class HomeScreen extends ConsumerWidget {
     final isSuccess = ref.watch(successProvider);
     final challenge = ref.watch(loginChallengeProvider);
     final api = ref.read(apiClientProvider);
+    final stats = ref.read(statsProvider.notifier);
     final theme = Theme.of(context).colorScheme;
     bool skipExpiredSnackBar = false;
 
@@ -89,28 +92,39 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
       body: challenge == null
-          ? Center(
-              child: Column(
-                spacing: 8,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  LottieAnimation(
-                    'assets/animations/tumbleweed.json',
-                    height: 250,
-                    width: 250,
-                    loop: true,
-                    loopDelay: Duration(seconds: 2),
+          ? Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+                    child: StatsSummary(),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      S.of(context).homescreen_no_login_attempts,
-                      style: TextStyle(fontSize: 18),
-                      textAlign: TextAlign.center,
-                    ),
+                ),
+                Center(
+                  child: Column(
+                    spacing: 8,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LottieAnimation(
+                        'assets/animations/tumbleweed.json',
+                        height: 250,
+                        width: 250,
+                        loop: true,
+                        loopDelay: Duration(seconds: 2),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          S.of(context).homescreen_no_login_attempts,
+                          style: TextStyle(fontSize: 18),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             )
           : SafeArea(
               child: Padding(
@@ -195,9 +209,11 @@ class HomeScreen extends ConsumerWidget {
                                       content: Text(
                                         // 'Failed to complete challenge: ${e.response?.data['error'] ?? e.message}',
                                         S.of(context).homescreen_challenge_fail,
-                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: theme.error,
                                     ),
                                   );
                                   return;
@@ -215,9 +231,11 @@ class HomeScreen extends ConsumerWidget {
                                       S
                                           .of(context)
                                           .homescreen_challenge_success,
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: theme.primaryContainer,
                                   ),
                                 );
                                 ref.read(successProvider.notifier).state = true;
@@ -226,7 +244,8 @@ class HomeScreen extends ConsumerWidget {
                                   barrierDismissible: false,
                                   builder: (dialogContext) {
                                     return SuccessAnimationOverlay(
-                                      onCompleted: () {
+                                      onCompleted: () async {
+                                        await stats.incrementSuccess();
                                         skipExpiredSnackBar = true;
                                         ref
                                             .read(

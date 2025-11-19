@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'package:hauth_api_external/hauth_api_external.dart';
+import 'package:hauth_mobile/providers/stats_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,8 @@ class PairingScreen extends HookConsumerWidget {
     BuildContext context,
     FlutterWearOsConnectivity wear,
     ApiWrapper api,
+    StatsNotifier stats,
+    ColorScheme theme,
   ) async {
     await controller.pauseCamera();
 
@@ -48,7 +51,10 @@ class PairingScreen extends HookConsumerWidget {
     // Load the default display name from preferences
     final preferences = await SharedPreferences.getInstance();
     final defaultDisplayName =
-        preferences.getString('displayName') ?? (context.mounted ? S.of(context).pairingscreen_generic_device_name : 'My Device');
+        preferences.getString('displayName') ??
+        (context.mounted
+            ? S.of(context).pairingscreen_generic_device_name
+            : 'My Device');
     final displayNameController = TextEditingController(
       text: defaultDisplayName,
     );
@@ -112,9 +118,14 @@ class PairingScreen extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
+              S
+                  .of(context)
+                  .pairingscreen_fail(
+                    e.response?.data['error'] ??
+                        S.of(context).pairingscreen_generic_error,
+                  ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: theme.error,
           ),
         );
       }
@@ -142,9 +153,14 @@ class PairingScreen extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
+              S
+                  .of(context)
+                  .pairingscreen_fail(
+                    e.response?.data['error'] ??
+                        S.of(context).pairingscreen_generic_error,
+                  ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: theme.error,
           ),
         );
       }
@@ -175,18 +191,24 @@ class PairingScreen extends HookConsumerWidget {
         true,
       );
     } on DioException catch (e) {
-
       if (kDebugMode) {
-        print('Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',);
+        print(
+          'Pairing confirmation failed: ${e.response?.statusCode} ${e.response?.data['error']}',
+        );
       }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error),
+              S
+                  .of(context)
+                  .pairingscreen_fail(
+                    e.response?.data['error'] ??
+                        S.of(context).pairingscreen_generic_error,
+                  ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: theme.error,
           ),
         );
       }
@@ -208,6 +230,7 @@ class PairingScreen extends HookConsumerWidget {
           return SuccessAnimationOverlay(
             onCompleted: () async {
               await controller.stopCamera();
+              await stats.incrementPaired();
               if (context.mounted) {
                 while (Navigator.of(dialogContext).canPop()) {
                   Navigator.of(dialogContext).pop();
@@ -224,6 +247,8 @@ class PairingScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final api = ref.read(apiClientProvider);
+    final stats = ref.read(statsProvider.notifier);
+    final theme = Theme.of(context).colorScheme;
 
     final double scanSize = MediaQuery.of(context).size.width * 0.8;
 
@@ -235,7 +260,15 @@ class PairingScreen extends HookConsumerWidget {
           onQRViewCreated: (QRViewController controller) {
             controller.scannedDataStream.listen((scanData) {
               if (context.mounted) {
-                onDetect(controller, scanData, context, wear, api);
+                onDetect(
+                  controller,
+                  scanData,
+                  context,
+                  wear,
+                  api,
+                  stats,
+                  theme,
+                );
               }
             });
           },
