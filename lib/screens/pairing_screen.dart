@@ -171,13 +171,18 @@ class PairingScreen extends HookConsumerWidget {
       await controller.resumeCamera();
       return;
     }
+
+    final triggerResponse = await triggerAndWait(
+      wear: wear,
+      measurementDurationMs: HEARTAUTH_MEASUREMENT_DURATION,
+      expiresAt: initResult.data!.expiresAt * 1000,
+      context: context,
+      allowCancel: false,
+    );
+
     final confirmPairingData = await buildConfirmPairingRequest(
       initResult.data!,
-      (await triggerAndWait(
-        wear: wear,
-        measurementDurationMs: HEARTAUTH_MEASUREMENT_DURATION,
-        expiresAt: initResult.data!.expiresAt * 1000,
-      )).data,
+      triggerResponse!.data,
       keyResponse.data!,
     );
 

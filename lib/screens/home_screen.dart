@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/providers/dev_mode_provider.dart';
 import 'package:hauth_mobile/providers/stats_provider.dart';
 import 'package:hauth_mobile/widgets/stats_summary.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -33,6 +35,7 @@ class HomeScreen extends ConsumerWidget {
     final api = ref.read(apiClientProvider);
     final stats = ref.read(statsProvider.notifier);
     final theme = Theme.of(context).colorScheme;
+    final isDev = ref.watch(devModeProvider);
     bool skipExpiredSnackBar = false;
 
     ref.listen<LoginChallenge?>(loginChallengeProvider, (prev, next) {
@@ -88,6 +91,13 @@ class HomeScreen extends ConsumerWidget {
                 );
               },
             ),
+            isDev ? DrawerItem(
+              icon: Icons.code,
+              title: S.of(context).homescreen_drawer_debug,
+              onTap: () {
+                Navigator.of(context).pushNamed('/debug');
+              },
+            ) : SizedBox.shrink(),
           ],
         ),
       ),
@@ -97,7 +107,11 @@ class HomeScreen extends ConsumerWidget {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+                    padding: const EdgeInsets.only(
+                      top: 12.0,
+                      left: 12.0,
+                      right: 12.0,
+                    ),
                     child: StatsSummary(),
                   ),
                 ),
@@ -174,14 +188,22 @@ class HomeScreen extends ConsumerWidget {
                         viewBuilder: (con, rf, wear) {
                           return ElevatedButton(
                             onPressed: () async {
+
+                              final triggerResponse = await triggerAndWait(
+                                wear: wear,
+                                measurementDurationMs:
+                                    HEARTAUTH_MEASUREMENT_DURATION,
+                                expiresAt: challenge.expiresAt * 1000,
+                                context: context
+                              );
+
+                              if (triggerResponse == null) {
+                                return;
+                              }
+
                               final challengeCompleteRequest =
                                   await buildChallengeCompleteRequest(
-                                    (await triggerAndWait(
-                                      wear: wear,
-                                      measurementDurationMs:
-                                          HEARTAUTH_MEASUREMENT_DURATION,
-                                      expiresAt: challenge.expiresAt * 1000,
-                                    )).data,
+                                    triggerResponse.data,
                                     challenge.ephemeralPublicKeyPem,
                                     challenge.nonce,
                                   );

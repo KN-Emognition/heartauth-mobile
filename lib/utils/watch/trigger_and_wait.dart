@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter/material.dart';
 import 'package:hauth_mobile/utils/watch/contract.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 String timestamp() {
   final now = DateTime.now();
@@ -23,7 +25,9 @@ String timestamp() {
 
 Future<void> _saveBodyToFile(String id, String username, String body) async {
   final dir = await getApplicationDocumentsDirectory();
-  final file = File('${dir.path}/${username.replaceAll(' ', '_')}_${timestamp()}_$id.json');
+  final file = File(
+    '${dir.path}/${username.replaceAll(' ', '_')}_${timestamp()}_$id.json',
+  );
   await file.writeAsString(body);
   if (kDebugMode) {
     print('[triggerAndWait] saved full body to ${file.path}');
@@ -32,15 +36,19 @@ Future<void> _saveBodyToFile(String id, String username, String body) async {
 
 final _uuid = const Uuid();
 
-Future<TriggerResponse> triggerAndWait({
+Future<TriggerResponse?> triggerAndWait({
   required FlutterWearOsConnectivity wear,
   required EpochMillis expiresAt,
   required int measurementDurationMs,
+  required BuildContext context,
   Map<String, dynamic> params = const {},
+  bool allowCancel = true,
   bool saveFile = false,
   String? username,
 }) async {
-  if(saveFile) {
+  var cancel = false;
+
+  if (saveFile) {
     if (username == null) {
       throw Exception(
         'Username must be provided in debug mode for logging purposes',
@@ -92,6 +100,33 @@ Future<TriggerResponse> triggerAndWait({
     }
   });
 
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (dialogContext) => Center(
+      child: AlertDialog(
+        title: Text(S.of(dialogContext).trigger_dialog_title),
+        content: Text(S.of(dialogContext).trigger_dialog_content),
+        actions: <Widget>[
+          allowCancel
+              ? TextButton(
+                  onPressed: () {
+                    cancel = true;
+                    sub.cancel();
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(S.of(dialogContext).trigger_dialog_cancel),
+                )
+              : SizedBox.shrink(),
+        ],
+      ),
+    ),
+  );
+
+  if (cancel) {
+    return null;
+  }
+
   final payload = Uint8List.fromList(utf8.encode(jsonEncode(req.toJson())));
 
   final devices = await wear.getConnectedDevices();
@@ -138,5 +173,10 @@ Future<TriggerResponse> triggerAndWait({
           print('[triggerAndWait] cleanup listener for id=${req.id}');
         }
         await sub.cancel();
+        if (context.mounted) {
+          if (Navigator.canPop(context)) {
+            Navigator.of(context).pop();
+          }
+        }
       });
 }
