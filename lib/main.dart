@@ -16,7 +16,6 @@ import 'package:hauth_mobile/providers/locale_provider.dart';
 import 'package:hauth_mobile/theme.dart';
 import 'package:hauth_mobile/screens/intro/intro_screen.dart';
 import 'package:hauth_mobile/screens/home_screen.dart';
-import 'package:hauth_mobile/screens/auth_screen.dart';
 import 'package:hauth_mobile/screens/pairing_screen.dart';
 import 'package:hauth_mobile/screens/about_screen.dart';
 import 'package:hauth_mobile/screens/error_screen.dart';
@@ -98,7 +97,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       } else if (!paired) {
         return PairingScreen();
       } else {
-        return const AuthScreen();
+        return const HomeScreen();
       }
 
     } on Exception catch (e) {
@@ -124,14 +123,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
       routes: {
-        '/home': (context) => const AuthScreen(),
+        '/home': (context) => const HomeScreen(),
         '/pairing': (context) => PairingScreen(),
         '/about': (context) => const AboutScreen(),
         '/license': (context) => const LicenseScreen(),
         '/error': (context) => const ErrorScreen(),
       },
       home: serverHealth == ServerHealthStatus.unhealthy
-          ? ErrorScreen(errorText: S.of(context).server_unreachable_error)
+          ? ErrorScreen(errorText: S.current.server_unreachable_error)
           : FutureBuilder<Widget>(
               future: _getHome(ref),
               builder: (context, snapshot) {
