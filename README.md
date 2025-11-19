@@ -14,11 +14,11 @@ collected from their devices.
 
 ### Running:
 
-- An Android or iOS device/emulator
+- A supported Samsung Galaxy Android device (running **Samsung Health Monitor** and **Galaxy Wearable**)
 - HeartAuth backend services running and accessible
 - Network connectivity
 - A valid HeartAuth account
-- A supported ecg/ppg scanning device (Samsung Galaxy Watch 4 or later running WearOS with our
+- A supported Samsung Galaxy WearOS device (Samsung Galaxy Watch 4 or later with our
   custom HeartAuth watch app installed)
 
 ## Building the App
@@ -40,6 +40,7 @@ collected from their devices.
    ```bash
    cp .env.example .env
    ```
+   **Note:** If running in `DEV_MODE`, you can add additional backend URLs for testing purposes by creating more variables beginning with `API_URL`.
 ### 4. Build the app:
 - For Android:
    ```bash
