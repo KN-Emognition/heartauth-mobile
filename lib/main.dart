@@ -98,7 +98,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       } else if (!paired) {
         return PairingScreen();
       } else {
-        return const HomeScreen();
+        return const AuthScreen();
       }
 
     } on Exception catch (e) {
@@ -124,8 +124,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(colorScheme: MaterialTheme.lightScheme()),
       routes: {
-        '/home': (context) => const HomeScreen(),
-        '/auth': (context) => const AuthScreen(),
+        '/home': (context) => const AuthScreen(),
         '/pairing': (context) => PairingScreen(),
         '/about': (context) => const AboutScreen(),
         '/license': (context) => const LicenseScreen(),
