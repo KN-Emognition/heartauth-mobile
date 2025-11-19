@@ -15,11 +15,7 @@ class WatchDebugApp extends HookConsumerWidget {
     return FutureProviderViewBuilder(
       provider: wearOSProvider,
       viewBuilder: (con, rf, wear) {
-        return MaterialApp(
-          title: 'Trigger Demo',
-          theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
-          home: TriggerPage(wear),
-        );
+        return TriggerPage(wear);
       },
     );
   }

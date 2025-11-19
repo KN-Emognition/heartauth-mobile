@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/providers/dev_mode_provider.dart';
 import 'package:hauth_mobile/providers/stats_provider.dart';
 import 'package:hauth_mobile/widgets/stats_summary.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -33,6 +35,7 @@ class HomeScreen extends ConsumerWidget {
     final api = ref.read(apiClientProvider);
     final stats = ref.read(statsProvider.notifier);
     final theme = Theme.of(context).colorScheme;
+    final isDev = ref.watch(devModeProvider);
     bool skipExpiredSnackBar = false;
 
     ref.listen<LoginChallenge?>(loginChallengeProvider, (prev, next) {
@@ -88,6 +91,13 @@ class HomeScreen extends ConsumerWidget {
                 );
               },
             ),
+            isDev ? DrawerItem(
+              icon: Icons.code,
+              title: S.of(context).homescreen_drawer_debug,
+              onTap: () {
+                Navigator.of(context).pushNamed('/debug');
+              },
+            ) : SizedBox.shrink(),
           ],
         ),
       ),

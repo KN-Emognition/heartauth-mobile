@@ -22,19 +22,25 @@ collected from their devices.
   custom HeartAuth watch app installed)
 
 ## Building the App
-1. Clone the repository:
+### 1. Clone the repository:
    ```bash
    git clone https://github.com/KN-Emognition/heartauth-mobile.git
    cd heartauth-mobile
    ```
-2. Install dependencies:
+### 2. Install dependencies:
    ```bash
     flutter pub get
     ```
-3. Configure environment variables:
-   - Create a `.env` file in the root directory.
+### 3. Configure environment variables:
+   #### Option A: create it yourself
+   - Create a `.env` file in the root director.
    - Add a `API_URL` variable with the URL of your HeartAuth backend services.
-4. Build the app:
+   - Add a `DEV_MODE` variable to enable hidden features, such as the watch debug screen.
+   #### Option B: copy the example file
+   ```bash
+   cp .env.example .env
+   ```
+### 4. Build the app:
 - For Android:
    ```bash
    flutter build apk

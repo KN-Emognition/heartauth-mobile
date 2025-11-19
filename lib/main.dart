@@ -36,7 +36,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebaseMessaging(navigatorKey, container, prefs);
   runApp(UncontrolledProviderScope(container: container, child: MyApp()));
-  //runApp(ProviderScope(child: WatchDebugApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -128,6 +127,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         '/about': (context) => const AboutScreen(),
         '/license': (context) => const LicenseScreen(),
         '/error': (context) => const ErrorScreen(),
+        '/debug': (context) => const WatchDebugApp(),
       },
       home: serverHealth == ServerHealthStatus.unhealthy
           ? ErrorScreen(errorText: S.current.server_unreachable_error)
