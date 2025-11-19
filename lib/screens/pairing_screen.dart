@@ -114,6 +114,7 @@ class PairingScreen extends HookConsumerWidget {
             content: Text(
               S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
             ),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -143,6 +144,7 @@ class PairingScreen extends HookConsumerWidget {
             content: Text(
                 S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error)
             ),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -184,6 +186,7 @@ class PairingScreen extends HookConsumerWidget {
             content: Text(
               S.of(context).pairingscreen_fail(e.response?.data['error'] ?? S.of(context).pairingscreen_generic_error),
             ),
+            backgroundColor: Colors.red,
           ),
         );
       }

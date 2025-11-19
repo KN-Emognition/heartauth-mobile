@@ -74,7 +74,10 @@ void handleMessage(RemoteMessage message, String context, GlobalKey<NavigatorSta
 
   container.read(loginChallengeProvider.notifier).setChallenge(challenge);
 
-  navigatorKey.currentState?.pushNamed('/auth');
+
+  while (navigatorKey.currentState?.canPop() ?? false) {
+    navigatorKey.currentState?.pop();
+  }
 }
 
 Future<void> initializeFirebaseMessaging(GlobalKey<NavigatorState> navigatorKey, ProviderContainer container, SharedPreferences prefs) async {
