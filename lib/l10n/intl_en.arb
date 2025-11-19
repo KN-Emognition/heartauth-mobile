@@ -49,6 +49,9 @@
   "future_provider_error": "Error: {error}",
   "languagedialog_title": "Select Language",
   "languagedialog_default": "(Default)",
+  "stats_paired": "Accounts paired: {count}",
+  "stats_challenges": "Incoming challenges: {count}",
+  "stats_successful": "Successful authentications: {count}",
   "server_unreachable_error": "There was an error while trying to reach our servers. Please try again later.",
   "unsupported_device": "This ({brand}) device is not supported."
 }

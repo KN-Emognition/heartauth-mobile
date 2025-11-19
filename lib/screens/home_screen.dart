@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hauth_mobile/providers/stats_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/utils/challenge_data.dart';
 import 'package:hauth_mobile/utils/watch/trigger_and_wait.dart';
@@ -29,6 +30,7 @@ class HomeScreen extends ConsumerWidget {
     final isSuccess = ref.watch(successProvider);
     final challenge = ref.watch(loginChallengeProvider);
     final api = ref.read(apiClientProvider);
+    final stats = ref.read(statsProvider.notifier);
     final theme = Theme.of(context).colorScheme;
     bool skipExpiredSnackBar = false;
 
@@ -226,7 +228,8 @@ class HomeScreen extends ConsumerWidget {
                                   barrierDismissible: false,
                                   builder: (dialogContext) {
                                     return SuccessAnimationOverlay(
-                                      onCompleted: () {
+                                      onCompleted: () async {
+                                        await stats.incrementSuccess();
                                         skipExpiredSnackBar = true;
                                         ref
                                             .read(
