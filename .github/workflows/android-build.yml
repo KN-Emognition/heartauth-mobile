@@ -52,6 +52,12 @@ jobs:
       - name: Pull Flutter dependencies
         run: flutter pub get
 
+      - name: Install intl_utils
+        run: flutter pub global activate intl_utils
+
+      - name: Generate localization files
+        run: flutter --no-color pub global run intl_utils:generate
+
       - name: Create DEMO .env file
         run: echo "API_URL=${{ secrets.API_URL_DEMO }}" > .env
 
@@ -66,10 +72,13 @@ jobs:
       - name: Rename DEMO release APK
         run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-release-demo.apk
 
-      - name: Create TEST .env file
-        run: echo "API_URL=${{ secrets.API_URL_TEST }}" > .env
+      - name: Add secondary API URL for DEV build
+        run: echo "API_URL_TEST=${{ secrets.API_URL_TEST }}" >> .env
 
-      - name: Build TEST release APK
+      - name: Enable DEV mode in-app
+        run: echo "DEV_MODE=true" >> .env
+
+      - name: Build DEV release APK
         env:
           KEYSTORE_FILE: shared-key.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -77,8 +86,8 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: flutter build apk --release
 
-      - name: Rename DEMO release APK
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-release-test.apk
+      - name: Rename DEV release APK
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-release-dev.apk
 
       - name: Create a release and push the artifact
         uses: softprops/action-gh-release@v2
@@ -87,7 +96,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           files: |
-            build/app/outputs/flutter-apk/app-release-test.apk
+            build/app/outputs/flutter-apk/app-release-dev.apk
             build/app/outputs/flutter-apk/app-release-demo.apk
           token: ${{ github.token }}
           generate_release_notes: true

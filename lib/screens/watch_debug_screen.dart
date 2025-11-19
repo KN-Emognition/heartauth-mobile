@@ -6,6 +6,7 @@ import 'package:hauth_mobile/providers/wearos_provider.dart';
 import 'package:hauth_mobile/utils/watch/contract.dart';
 import 'package:hauth_mobile/utils/watch/trigger_and_wait.dart';
 import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class WatchDebugApp extends HookConsumerWidget {
   const WatchDebugApp({super.key});
@@ -160,8 +161,8 @@ class _TriggerPageState extends State<TriggerPage> {
   @override
   Widget build(BuildContext context) {
     final waitingText = _isWaiting
-        ? "Waiting for response…"
-        : "Idle. Press the button to send a trigger.";
+        ? S.of(context).watchdebugscreen_waiting
+        : S.of(context).watchdebugscreen_idle;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Trigger & Wait Demo')),
@@ -188,7 +189,11 @@ class _TriggerPageState extends State<TriggerPage> {
                               Text(waitingText),
                               const SizedBox(height: 6),
                               Text(
-                                "Time left: ${_formatMs(_remainingMs)}",
+                                S
+                                    .of(context)
+                                    .watchdebugscreen_time_left(
+                                      _formatMs(_remainingMs),
+                                    ),
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ],
@@ -212,8 +217,8 @@ class _TriggerPageState extends State<TriggerPage> {
                         TextField(
                           controller: _usernameController,
                           decoration: InputDecoration(
-                            labelText: 'Username (prefix saved filename)',
-                            hintText: 'enter username',
+                            labelText: S.of(context).watchdebugscreen_username,
+                            hintText: S.of(context).watchdebugscreen_username_hint,
                             prefixIcon: const Icon(Icons.person),
                           ),
                         ),
@@ -226,7 +231,11 @@ class _TriggerPageState extends State<TriggerPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Sample length: $_sampleLengthSec s'),
+                                  Text(
+                                    S
+                                        .of(context)
+                                        .watchdebugscreen_slider(_sampleLengthSec),
+                                  ),
                                   Slider(
                                     value: _sampleLengthSec.toDouble(),
                                     min: 8,
@@ -280,13 +289,13 @@ class _TriggerPageState extends State<TriggerPage> {
                 if (!_isWaiting)
                   FilledButton.icon(
                     icon: const Icon(Icons.flash_on),
-                    label: Text("Send Trigger"),
+                    label: Text(S.of(context).watchdebugscreen_trigger),
                     onPressed: () => _startTrigger(),
                   )
                 else
                   FilledButton.icon(
                     icon: const Icon(Icons.refresh),
-                    label: Text("Retrigger"),
+                    label: Text(S.of(context).watchdebugscreen_retrigger),
                     onPressed: _retrigger,
                   ),
 
@@ -300,13 +309,20 @@ class _TriggerPageState extends State<TriggerPage> {
                         alignment: Alignment.centerLeft,
                         child: _lastError != null
                             ? Text(
-                                "Error: ${_lastError ?? ''}",
+                                S
+                                    .of(context)
+                                    .watchdebugscreen_error(_lastError ?? ''),
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.error,
                                 ),
                               )
                             : Text(
-                                "Last response: ok=${_lastResponse!.ok} id=${_lastResponse!.id}",
+                                S
+                                    .of(context)
+                                    .watchdebugscreen_last_response(
+                                      _lastResponse!.ok,
+                                      _lastResponse!.id,
+                                    ),
                               ),
                       ),
                     ),

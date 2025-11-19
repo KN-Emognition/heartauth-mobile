@@ -30,7 +30,7 @@ collected from their devices.
 ### 2. Install dependencies:
    ```bash
     flutter pub get
-    ```
+   ```
 ### 3. Configure environment variables:
    #### Option A: create it yourself
    - Create a `.env` file in the root director.
