@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hauth_mobile/utils/watch/contract.dart';
+import 'package:hauth_mobile/utils/media_store.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
@@ -24,13 +24,13 @@ String timestamp() {
 }
 
 Future<void> _saveBodyToFile(String id, String username, String body) async {
-  final dir = await getApplicationDocumentsDirectory();
-  final file = File(
-    '${dir.path}/${username.replaceAll(' ', '_')}_${timestamp()}_$id.json',
-  );
-  await file.writeAsString(body);
+  final filename = '${username.replaceAll(' ', '_')}_${timestamp()}_$id.json';
+  File tempFile = await saveJsonToTemporaryFile(body, filename);
+  await MediaStore().addItem(file: tempFile, name: filename);
+  await tempFile.delete();
+
   if (kDebugMode) {
-    print('[triggerAndWait] saved full body to ${file.path}');
+    print('[triggerAndWait] saved full body to $filename');
   }
 }
 
@@ -80,7 +80,7 @@ Future<TriggerResponse?> triggerAndWait({
     try {
       final raw = utf8.decode(msg.data);
       final map = jsonDecode(raw) as Map<String, dynamic>;
-      if (kDebugMode && saveFile) {
+      if (saveFile) {
         await _saveBodyToFile(req.id, username!, raw);
       }
       if (map['type'] == typeResult && map['id'] == req.id) {

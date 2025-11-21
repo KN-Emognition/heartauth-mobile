@@ -31,6 +31,15 @@ class Page4 extends PageViewModel {
           viewBuilder: (context, ref, currentStep) {
             return Column(
               children: [
+                // SizedBox(
+                //   width: 300,
+                //   child: IconButton(
+                //     icon: Icon(Icons.refresh),
+                //     onPressed: () {
+                //       ref.refresh(currentStepProvider);
+                //     },
+                //   )
+                // ),
                 SizedBox(
                   width: 300,
                   child: ElevatedButton(
@@ -79,6 +88,7 @@ class Page4 extends PageViewModel {
                                 }
                               },
                             );
+                            ref.refresh(currentStepProvider);
                           }
                         : null,
                     child: Text(S.of(_context).intropage4_step2("2.")),
@@ -112,6 +122,7 @@ class Page4 extends PageViewModel {
                                 );
                               }
                             }
+                            ref.refresh(currentStepProvider);
                           }
                         : null,
                     child: Text(S.of(_context).intropage4_step3("3.")),
