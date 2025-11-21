@@ -20,9 +20,9 @@ import 'package:hauth_mobile/widgets/lottie_animation.dart';
 import 'package:hauth_mobile/constant.dart';
 import 'package:hauth_mobile/generated/l10n.dart';
 
-final successProvider = StateProvider<bool>((ref) {
-  return false;
-});
+final successProvider = StateProvider<bool>((ref) =>false);
+
+final _skipExpiredSnackBarProvider = StateProvider<bool>((ref) => false);
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -36,15 +36,17 @@ class HomeScreen extends ConsumerWidget {
     final stats = ref.read(statsProvider.notifier);
     final theme = Theme.of(context).colorScheme;
     final isDev = ref.watch(devModeProvider);
-    bool skipExpiredSnackBar = false;
 
     ref.listen<LoginChallenge?>(loginChallengeProvider, (prev, next) {
       if (next == null) {
-        // Challenge expired, show a message and go back
-        if (!skipExpiredSnackBar) {
+        final skip = ref.read(_skipExpiredSnackBarProvider);
+        if (!skip) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).homescreen_challenge_expired)),
           );
+        } else {
+          // Reset the flag after suppressing the snackbar once.
+          ref.read(_skipExpiredSnackBarProvider.notifier).state = false;
         }
       }
     });
@@ -221,7 +223,7 @@ class HomeScreen extends ConsumerWidget {
                                   true,
                                 );
                               } on DioException catch (e) {
-                                skipExpiredSnackBar = true;
+                                ref.read(_skipExpiredSnackBarProvider.notifier).state = true;
                                 await ref
                                     .read(loginChallengeProvider.notifier)
                                     .clearChallenge();
@@ -260,7 +262,7 @@ class HomeScreen extends ConsumerWidget {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    backgroundColor: theme.primaryContainer,
+                                    backgroundColor: Colors.lightGreen.shade800,
                                   ),
                                 );
                                 ref.read(successProvider.notifier).state = true;
@@ -271,7 +273,7 @@ class HomeScreen extends ConsumerWidget {
                                     return SuccessAnimationOverlay(
                                       onCompleted: () async {
                                         await stats.incrementSuccess();
-                                        skipExpiredSnackBar = true;
+                                        ref.read(_skipExpiredSnackBarProvider.notifier).state = true;
                                         ref
                                             .read(
                                               loginChallengeProvider.notifier,
