@@ -225,6 +225,9 @@ class HomeScreen extends ConsumerWidget {
                                 await ref
                                     .read(loginChallengeProvider.notifier)
                                     .clearChallenge();
+                                if(kDebugMode) {
+                                  print('Error completing challenge: ${e.response?.data['error'] ?? e.message}');
+                                }
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(

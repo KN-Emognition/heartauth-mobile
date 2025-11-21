@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:hauth_api_external/hauth_api_external.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,6 +35,7 @@ final apiUrlProvider = Provider<String>((ref) {
 final apiClientProvider = Provider<ApiWrapper>((ref) {
   final apiUrl = ref.watch(apiUrlProvider);
   final apiClient = HauthApiExternal(
+    dio: Dio(BaseOptions(receiveTimeout: Duration(seconds: 20), baseUrl: apiUrl)),
     basePathOverride: apiUrl,
     serializers: standardSerializers,
   );
