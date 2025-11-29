@@ -1,0 +1,116 @@
+name: Generate Mobile contract API client
+
+on:
+  push:
+    branches: [mobile-contract]
+    paths:
+      - "mobile.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: openapi-generate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Compute short SHA
+        id: vars
+        shell: bash
+        run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java (required by openapi-generator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Dart (no Flutter needed)
+        uses: dart-lang/setup-dart@v1
+
+      - name: Create ephemeral generator pubspec
+        run: |
+          mkdir -p ci/openapi_gen
+          cat > ci/openapi_gen/pubspec.yaml <<'YAML'
+          name: ci_openapi_gen
+          publish_to: "none"
+          environment:
+            sdk: ">=3.0.0 <4.0.0"
+          dependencies:
+            openapi_generator_annotations: ^6.1.0
+          dev_dependencies:
+            build_runner: ^2.4.0
+            openapi_generator: ^6.1.0
+          YAML
+
+      - name: Copy spec and config into generator workspace
+        run: |
+          mkdir -p ci/openapi_gen
+          cp pubspec.yaml ci/openapi_gen/pubspec.yaml
+          
+          mkdir -p ci/openapi_gen/specs
+          cp mobile.yml ci/openapi_gen/specs/mobile.yml
+
+          mkdir -p ci/openapi_gen/lib
+          cp openapi_config.dart ci/openapi_gen/lib/openapi_config.dart
+
+      - name: Install generator deps
+        working-directory: ci/openapi_gen
+        run: dart pub get
+
+      - name: Bust caches and generate
+        working-directory: ci/openapi_gen
+        run: |
+          dart run build_runner clean || true
+          rm -f .dart_tool/openapi-generator-cache.json || true
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Prune build artifacts from generated client
+        working-directory: ci/openapi_gen
+        run: |
+          rm -rf .dart_tool build .packages .pub-cache \
+                 .flutter-plugins .flutter-plugins-dependencies pubspec.lock
+
+      - name: Pack generated contents (flatten)
+        run: |
+          tar -C ci/openapi_gen -czf /tmp/gen.tgz .
+
+      - name: Remove ephemeral generator project
+        run: rm -rf ci/openapi_gen
+
+      - name: Create orphan branch and clean tree
+        env:
+          BRANCH_NAME: mobile-heartauth-client-${{ steps.vars.outputs.short_sha }}
+        run: |
+          git switch --orphan "$BRANCH_NAME"
+          git rm -rf . || true
+          git clean -fdx
+
+      - name: Restore generated content at repo root and stage
+        run: |
+          tar -C . -xzf /tmp/gen.tgz
+          git add -A
+          git status --short
+
+      - name: Commit & push flattened client
+        env:
+          BRANCH_NAME: mobile-heartauth-client-${{ steps.vars.outputs.short_sha }}
+        shell: bash
+        run: |
+          TS="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(openapi): generated mobile client" \
+                      -m "Branch contains ONLY generated files" \
+                      -m "Run: ${TS}"
+          git push --force-with-lease origin HEAD:"$BRANCH_NAME"
