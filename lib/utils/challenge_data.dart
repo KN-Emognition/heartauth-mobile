@@ -1,5 +1,5 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:hauth_api_external/hauth_api_external.dart';
+import 'package:heartauth_mobile/heartauth_mobile.dart';
 import 'package:hauth_mobile/utils/encryption.dart';
 
 Future<CompleteChallengeRequest> buildChallengeCompleteRequest(

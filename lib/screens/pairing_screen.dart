@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wear_os_connectivity/flutter_wear_os_connectivity.dart';
-import 'package:hauth_api_external/hauth_api_external.dart';
+import 'package:heartauth_mobile/heartauth_mobile.dart';
 import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
@@ -123,6 +123,7 @@ class PairingScreen extends HookConsumerWidget {
       await controller.resumeCamera();
       return;
     }
+    // TODO handle this field: initResult.data.username
 
     Response<JwkSet>? keyResponse;
     try {
