@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hauth_mobile/providers/shared_preferences_provider.dart';
+import 'package:hauth_mobile/providers/stats_provider.dart';
 
 class LoginChallenge {
   final String challengeId;
@@ -21,9 +22,10 @@ class LoginChallenge {
 
 class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
   final SharedPreferences _prefs;
+  final StatsNotifier _stats;
   Timer? _expiryTimer;
 
-  LoginChallengeNotifier(this._prefs) : super(null) {
+  LoginChallengeNotifier(this._prefs, this._stats) : super(null) {
     loadChallenge();
   }
 
@@ -39,6 +41,12 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
         ttl != null &&
         ephemeralPublicKeyPem != null &&
         nonce != null) {
+
+      if((_prefs.getString('lastChallengeId') ?? '') != challengeId) {
+        _prefs.setString('lastChallengeId', challengeId);
+        _stats.incrementIncoming();
+      }
+
       final challenge = LoginChallenge(
         challengeId: challengeId,
         expiresAt: expiresAt,
@@ -58,6 +66,12 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
     await _prefs.setInt('ttl', challenge.ttl);
     await _prefs.setString('ephemeralPublicKey', challenge.ephemeralPublicKeyPem);
     await _prefs.setString('nonce', challenge.nonce);
+
+    if((_prefs.getString('lastChallengeId') ?? '') != challenge.challengeId) {
+      await _prefs.setString('lastChallengeId', challenge.challengeId);
+      _stats.incrementIncoming();
+    }
+
     state = challenge;
     _startExpiryTimer(challenge.expiresAt);
   }
@@ -99,5 +113,6 @@ class LoginChallengeNotifier extends StateNotifier<LoginChallenge?> {
 final loginChallengeProvider =
     StateNotifierProvider<LoginChallengeNotifier, LoginChallenge?>((ref) {
       final prefs = ref.watch(sharedPreferencesProvider);
-      return LoginChallengeNotifier(prefs);
+      final stats = ref.watch(statsProvider.notifier);
+      return LoginChallengeNotifier(prefs, stats);
     });

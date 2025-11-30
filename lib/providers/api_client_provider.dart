@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:heartauth_mobile/heartauth_mobile.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hauth_mobile/providers/server_health_provider.dart';
+import 'package:hauth_mobile/providers/shared_preferences_provider.dart';
 
 class ApiWrapper {
   final HeartauthMobile _api;
@@ -27,10 +29,17 @@ class ApiWrapper {
   }
 }
 
+final apiUrlProvider = Provider<String>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return prefs.getString('API_URL') ?? dotenv.env['API_URL'] ??
+      r'https://orchestrator.example.com';
+});
+
 final apiClientProvider = Provider<ApiWrapper>((ref) {
+  final apiUrl = ref.watch(apiUrlProvider);
   final apiClient = HeartauthMobile(
-    basePathOverride:
-        dotenv.env['API_URL'] ?? r'https://orchestrator.example.com',
+    dio: Dio(BaseOptions(receiveTimeout: Duration(seconds: 20), baseUrl: apiUrl)),
+    basePathOverride: apiUrl,
     serializers: standardSerializers,
   );
 

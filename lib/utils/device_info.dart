@@ -7,10 +7,12 @@ Future<Map<String, String>> pullDeviceInfo() async {
 
   return {
     "deviceId": "android:${android.id}", // SSAID
-    "displayName": "${android.manufacturer} ${android.model}",
+    "displayName": "${android.brand} ${android.model}",
     "platform": "ANDROID",
     "osVersion": android.version.release,
-    "model": "${android.manufacturer} ${android.model}",
+    "model": android.model,
+    "brand": android.brand,
+    "manufacturer": android.manufacturer
   };
 }
 
@@ -22,4 +24,6 @@ Future<void> updateDeviceInfo() async {
   await prefs.setString('platform', info['platform']!);
   await prefs.setString('osVersion', info['osVersion']!);
   await prefs.setString('model', info['model']!);
+  await prefs.setString('brand', info['brand']!);
+  await prefs.setString('manufacturer', info['manufacturer']!);
 }

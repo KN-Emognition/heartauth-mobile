@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hauth_mobile/widgets/app_card.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -9,9 +10,7 @@ class AboutScreen extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('About'),
-      ),
+      appBar: AppBar(title: Text(S.of(context).aboutscreen_title)),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -33,46 +32,28 @@ class AboutScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
-                            'About our app',
+                          Text(
+                            S.of(context).aboutscreen_subtitle,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 22,
                             ),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
-                            'Feels is a social media platform focused on connecting with your closest friends instead of random individuals online. Our team developed this app as a university project, but it has since grown into something much more significant.',
+                          Text(
+                            S.of(context).aboutscreen_desc1,
                             textAlign: TextAlign.justify,
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
-                            'A major social issue of the 21st century is social isolation — young people often hesitate to express their feelings, keeping them bottled up, while their friends assume everything is fine. This leads to many friendships lacking authenticity; instead of being founded on trust, they are based on both parties pretending their lives are flawless.',
+                          Text(
+                            S.of(context).aboutscreen_desc2,
                             textAlign: TextAlign.justify,
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
-                            'Social media exacerbates this problem, as modern platforms encourage users to create a false persona, selectively sharing information to present themselves in the best light. This curated version of reality often leads to feelings of inadequacy and disconnection among users.',
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'This is where our app steps in. The feed consists solely of your closest friends — eliminating parasocial relationships. Each post conveys a specific emotion, providing your friends with an accurate understanding of how you are feeling. Additionally, we\'ve added a chat feature that allows you to quickly check in on your friends if you notice something off about their latest status.',
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'At Feels, our goal is to foster genuine connections and make emotional well-being a shared responsibility. We believe that honest communication between friends can make a meaningful difference in combating loneliness and promoting mental health.',
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'We hope Feels helps you stay more connected, more authentic, and more supported. Enjoy using our app 😊',
+                          Text(
+                            S.of(context).aboutscreen_desc3,
                             textAlign: TextAlign.justify,
                             style: TextStyle(fontSize: 16),
                           ),
@@ -81,6 +62,12 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/license");
+                },
+                child: Text(S.of(context).aboutscreen_licenses_button),
               ),
             ],
           ),

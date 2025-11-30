@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class FutureProviderViewBuilder<T> extends HookConsumerWidget {
   final FutureProvider<T> provider;
@@ -15,7 +16,6 @@ class FutureProviderViewBuilder<T> extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Consumer(
       builder: (context, ref, child) {
         final asyncValue = ref.watch(provider);
@@ -25,10 +25,13 @@ class FutureProviderViewBuilder<T> extends HookConsumerWidget {
             //navigate to error screen
 
             final navigator = Navigator.of(context);
-            while(navigator.canPop()) {
+            while (navigator.canPop()) {
               navigator.pop();
             }
-            navigator.pushNamed('/error', arguments: {'errorText': stacktrace.toString()});
+            navigator.pushNamed(
+              '/error',
+              arguments: {'errorText': stacktrace.toString()},
+            );
 
             return SizedBox(
               width: 400,
@@ -36,7 +39,7 @@ class FutureProviderViewBuilder<T> extends HookConsumerWidget {
               child: Scaffold(
                 backgroundColor: bgColor,
                 body: Center(
-                  child: Text('Error: $error'),
+                  child: Text(S.of(context).future_provider_error(error)),
                 ),
               ),
             );

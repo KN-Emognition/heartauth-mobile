@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hauth_mobile/widgets/lottie_animation.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String? errorText;
@@ -27,7 +28,7 @@ class ErrorScreen extends StatelessWidget {
             LottieAnimation('assets/animations/failed.json'),
             SizedBox(height: 16),
             Text(
-              error ?? 'An unknown error occurred.',
+              error ?? S.of(context).errorscreen_generic_error,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: theme.onSurface),
             ),

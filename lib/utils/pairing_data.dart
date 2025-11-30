@@ -37,7 +37,7 @@ Future<(InitPairingRequest, Map<String, dynamic>)> buildInitPairingRequest(
         ..fcmToken = storage.getString('fcmToken')
         ..platform = Platform.ANDROID
         ..osVersion = storage.getString("osVersion")
-        ..model = storage.getString("model"),
+        ..model = "${storage.getString("brand")} ${storage.getString("model")}",
       // ..attestation = attestationBuilder,
     ),
     {"Authorization": "Bearer $jwtToken"},

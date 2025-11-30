@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hauth_mobile/widgets/future_provider_view_builder.dart';
 import 'package:hauth_mobile/providers/intro_step_provider.dart';
+import 'package:hauth_mobile/generated/l10n.dart';
 
 class Page4 extends PageViewModel {
   // ignore: unused_field
@@ -18,11 +19,11 @@ class Page4 extends PageViewModel {
 
   Page4(this._context, this._ref)
     : super(
-        title: "Complete the setup",
+        title: S.of(_context).intropage4_title,
         image: Center(
           child: SvgPicture.asset(
             'assets/intro4.svg',
-            semanticsLabel: 'Phone icon with gear beside it signifying setup',
+            semanticsLabel: S.of(_context).intropage4_semantics,
           ),
         ),
         bodyWidget: FutureProviderViewBuilder(
@@ -30,6 +31,15 @@ class Page4 extends PageViewModel {
           viewBuilder: (context, ref, currentStep) {
             return Column(
               children: [
+                // SizedBox(
+                //   width: 300,
+                //   child: IconButton(
+                //     icon: Icon(Icons.refresh),
+                //     onPressed: () {
+                //       ref.refresh(currentStepProvider);
+                //     },
+                //   )
+                // ),
                 SizedBox(
                   width: 300,
                   child: ElevatedButton(
@@ -48,7 +58,7 @@ class Page4 extends PageViewModel {
                             }
                           }
                         : null,
-                    child: Text("1. Grant camera access"),
+                    child: Text(S.of(_context).intropage4_step1("1.")),
                   ),
                 ),
                 SizedBox(height: 5),
@@ -62,20 +72,26 @@ class Page4 extends PageViewModel {
                     ),
                     onPressed: currentStep == 1
                         ? () async {
-                            openAppOrPlayStore('com.samsung.android.app.watchmanager', onError: (error) {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Failed to open Galaxy Wearable app!',
+                            openAppOrPlayStore(
+                              'com.samsung.android.app.watchmanager',
+                              onError: (error) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        S
+                                            .of(_context)
+                                            .intropage4_galaxy_wearable_error,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
-                            });
+                                  );
+                                }
+                              },
+                            );
+                            ref.refresh(currentStepProvider);
                           }
                         : null,
-                    child: Text("2. Connect Galaxy Watch device"),
+                    child: Text(S.of(_context).intropage4_step2("2.")),
                   ),
                 ),
                 SizedBox(height: 5),
@@ -99,14 +115,17 @@ class Page4 extends PageViewModel {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('Failed to open app page!'),
+                                    content: Text(
+                                      S.of(_context).intropage4_app_page_error,
+                                    ),
                                   ),
                                 );
                               }
                             }
+                            ref.refresh(currentStepProvider);
                           }
                         : null,
-                    child: Text("3. Install companion app on watch"),
+                    child: Text(S.of(_context).intropage4_step3("3.")),
                   ),
                 ),
                 SizedBox(height: 5),
@@ -129,7 +148,7 @@ class Page4 extends PageViewModel {
                             }
                           }
                         : null,
-                    child: Text("4. Grant notification access"),
+                    child: Text(S.of(_context).intropage4_step4("4.")),
                   ),
                 ),
                 SizedBox(height: 5),
@@ -151,7 +170,7 @@ class Page4 extends PageViewModel {
                             ).pushReplacementNamed("/pairing");
                           }
                         : null,
-                    child: Text("5. Begin pairing"),
+                    child: Text(S.of(_context).intropage4_step5("5.")),
                   ),
                 ),
               ],
