@@ -58,10 +58,10 @@ dependencies:
   qr_code_scanner_plus: ^2.0.10+1
   jose: ^0.3.5
   dart_jsonwebtoken: ^3.2.0
-  hauth_api_external:
+  heartauth_mobile:
     git:
-      url: git@github.com:KN-Emognition/docs-and-gitops.git
-      ref: external-client-fda2dcd
+      url: git@github.com:KN-Emognition/heartauth-mobile.git
+      ref: mobile-heartauth-client-2dcef0c
   url_launcher: ^6.3.2
   external_app_launcher: ^4.0.3
   package_info_plus: ^9.0.0

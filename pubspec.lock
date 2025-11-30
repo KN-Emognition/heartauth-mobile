@@ -605,13 +605,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  hauth_api_external:
+  heartauth_mobile:
     dependency: "direct main"
     description:
       path: "."
-      ref: external-client-fda2dcd
-      resolved-ref: f8ad402f828e6e4a07c58bebe4c381b73e976123
-      url: "git@github.com:KN-Emognition/docs-and-gitops.git"
+      ref: mobile-heartauth-client-2dcef0c
+      resolved-ref: "9ca0c93509a08ebb7f6f62b7d27862592f6f1f4b"
+      url: "git@github.com:KN-Emognition/heartauth-mobile.git"
     source: git
     version: "0.1.0"
   hooks_riverpod:
