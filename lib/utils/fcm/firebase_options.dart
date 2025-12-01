@@ -53,10 +53,10 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDlPLLKmMTkFR6QWraGpP9wJOQdenIL7NU',
-    appId: '1:1017509602207:android:2bd16f47ea5ec205d293aa',
-    messagingSenderId: '1017509602207',
-    projectId: 'knemognition-heartauth',
-    storageBucket: 'knemognition-heartauth.firebasestorage.app',
+    apiKey: 'AIzaSyA5hqwA_kKCWK4r23fnow-av7aNT9z4VFc',
+    appId: '1:1056760273728:android:b872780531e133b412f8a5',
+    messagingSenderId: '1056760273728',
+    projectId: 'heartauth-da494',
+    storageBucket: 'heartauth-da494.firebasestorage.app',
   );
 }

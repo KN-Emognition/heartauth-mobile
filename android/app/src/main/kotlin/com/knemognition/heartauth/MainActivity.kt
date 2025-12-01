@@ -1,4 +1,4 @@
-package knemognition.heartauth.mobile
+package com.knemognition.heartauth
 
 import android.content.ContentValues
 import android.os.Build
